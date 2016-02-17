@@ -44,11 +44,11 @@ while True:
 		cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
 
 		# Hull
-		hull = cv2.convexHull(cnt)
-		cv2.drawContours(frame,[hull],0,(0,0,255),2)
+		hull = cv2.convexHull(cnt,returnPoints = False)
+		#cv2.drawContours(frame,[hull],0,(0,0,255),2)
 		
-		hull_area = cv2.contourArea(hull)
-		solidity = round(float(area)/hull_area,2)
+		#hull_area = cv2.contourArea(hull)
+		#solidity = round(float(area)/hull_area,2)
 		
 		(x,y),(MA,ma),angle = cv2.fitEllipse(cnt)
 		angle = round(angle,2)
@@ -76,6 +76,37 @@ while True:
 		#cv2.circle(frame,topmost,6,[255,0,0],-1)
 		#cv2.circle(frame,bottommost,6,[255,0,0],-1)
 		
+		M = cv2.moments(cnt)
+		cx = int(M['m10']/M['m00'])
+		cy = int(M['m01']/M['m00'])
+		cv2.circle(frame,(cx,cy),8,[255,0,0],-1)
+
+		try:
+			defects = cv2.convexityDefects(cnt,hull)
+		except Exception, e:
+			print e
+		cntr = 0
+		if defects is not None:
+			for i in range(defects.shape[0]):
+				s,e,f,d = defects[i,0]
+				start = tuple(cnt[s][0])
+				end = tuple(cnt[e][0])
+				far = tuple(cnt[f][0])
+				if d<12000:
+					continue
+				
+				if far[1] >= (cy+20):
+					continue
+				else:
+					pass
+					#print far[1],cy
+				#dist = cv2.pointPolygonTest(cnt,far,True)
+				cv2.circle(frame,far,8,[0,0,255],-1)
+				prev_start = start
+				cntr +=1
+
+			disp("No of finger's = "+str(cntr+1),(10,300))
+
 		cv2.imshow('mask',mask)
 		#cv2.imwrite("blur_frame.jpg",frame)	# Debugging; SLOWWWW operation
 		#cv2.imwrite("mask.jpg",mask)			# Debugging; SLOWWWW operation
