@@ -10,13 +10,12 @@ while True:
 	try:
 		ret,frame=cap.read()
 		frame = cv2.medianBlur(frame,5)    # 5 is a fairly small kernel size
-		cv2.imwrite("blur_frame.jpg",frame)
 		hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
 		#lower_blue=np.array([20,40,50])
 		#upper_blue=np.array([74,255,255])
 		
-		lower_blue=np.array([4,11,30])
-		upper_blue=np.array([43,90,100])
+		lower_blue=np.array([2,11,30])
+		upper_blue=np.array([43,90,80])
 
 		mask=cv2.inRange(hsv,lower_blue,upper_blue)
 		res = cv2.bitwise_and(frame,frame,mask=mask)
@@ -40,8 +39,8 @@ while True:
 		area = cv2.contourArea(cnt)
 		extent = round(float(area)/rect_area,2) 
 		
-		cv2.circle(frame,(x,y),4,[255,0,0],-1)
-		cv2.circle(frame,(x+w,y+h),4,[255,0,0],-1)
+		#cv2.circle(frame,(x,y),4,[255,0,0],-1)
+		#cv2.circle(frame,(x+w,y+h),4,[255,0,0],-1)
 		cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
 
 		# Hull
@@ -72,13 +71,15 @@ while True:
 		rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
 		topmost = tuple(cnt[cnt[:,:,1].argmin()][0])
 		bottommost = tuple(cnt[cnt[:,:,1].argmax()][0])
-		cv2.circle(frame,leftmost,6,[255,0,0],-1)
-		cv2.circle(frame,rightmost,6,[255,0,0],-1)
-		cv2.circle(frame,topmost,6,[255,0,0],-1)
-		cv2.circle(frame,bottommost,6,[255,0,0],-1)
+		#cv2.circle(frame,leftmost,6,[255,0,0],-1)
+		#cv2.circle(frame,rightmost,6,[255,0,0],-1)
+		#cv2.circle(frame,topmost,6,[255,0,0],-1)
+		#cv2.circle(frame,bottommost,6,[255,0,0],-1)
 		
 		cv2.imshow('mask',mask)
-		cv2.imwrite("mask.jpg",mask)
+		#cv2.imwrite("blur_frame.jpg",frame)	# Debugging; SLOWWWW operation
+		#cv2.imwrite("mask.jpg",mask)			# Debugging; SLOWWWW operation
+		
 		#cv2.imshow('res',res)
 		#cv2.imshow('res_gray',res_gray)
 		cv2.imshow('frame',frame)
