@@ -16,10 +16,10 @@ def count_fingers(cnts,btn1):
 		M = cv2.moments(cnt)
 		cx = int(M['m10']/M['m00'])
 		cy = int(M['m01']/M['m00'])
-		cv2.circle(btn1,(cx,cy),8,[255,0,0],-1)
+		cv2.circle(img,(cx,cy),6,[59,53,255],-1)
 
 		hull = cv2.convexHull(cnt)
-		cv2.drawContours(btn1,[hull],0,(0,0,255),2)
+		cv2.drawContours(img,[hull],0,(0,0,255),2)
 
 		hull = cv2.convexHull(cnt,returnPoints = False)
 		
@@ -45,17 +45,17 @@ def count_fingers(cnts,btn1):
 					pass
 					#print far[1],cy
 				#dist = cv2.pointPolygonTest(cnt,far,True)
-				cv2.circle(btn1,far,8,[0,0,255],-1)
-				prev_start = start
+				cv2.circle(img,far,6,[100,100,0],-1)
+				cv2.circle(img,end,6,[255,0,255],-1)
 				cntr +=1
 
-			disp("No of finger's = "+str(cntr+1),(10,300))
+		disp("No of finger's = "+str(cntr+1),(10,300))
 
 
 while True:
 	ret,img=cap.read()
 	img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
-	cv2.rectangle(img,(0,0),(300,300),(0,255,0),3)
+	cv2.rectangle(img,(0,0),(300,300),(50,200,0),3)
 	btn1 = img[0:300,0:300]
 
 	hsv_btn1 = cv2.cvtColor(btn1,cv2.COLOR_BGR2HSV)
@@ -74,9 +74,10 @@ while True:
 	
 	#cv2.imwrite('btn1.jpg', btn1)
 	#cv2.imwrite('mask.jpg', mask)
-	cv2.imshow('Img',img)
 	cv2.imshow('mask',mask)
 	cv2.imshow('Res',res)
+	cv2.imshow('Img',img)
+	
 	if cv2.waitKey(20)&0xff==ord('q'):
 		break
 
