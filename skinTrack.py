@@ -11,13 +11,13 @@ while True:
 		ret,frame=cap.read()
 		frame = cv2.medianBlur(frame,5)    # 5 is a fairly small kernel size
 		hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
-		#lower_blue=np.array([20,40,50])
-		#upper_blue=np.array([74,255,255])
+		#lower_skin=np.array([20,40,50])
+		#upper_skin=np.array([74,255,255])
 		
-		lower_blue=np.array([2,11,30])
-		upper_blue=np.array([43,90,80])
+		lower_skin=np.array([2,11,30])
+		upper_skin=np.array([43,90,80])
 
-		mask=cv2.inRange(hsv,lower_blue,upper_blue)
+		mask=cv2.inRange(hsv,lower_skin,upper_skin)
 		res = cv2.bitwise_and(frame,frame,mask=mask)
 		res_gray=cv2.cvtColor(res,cv2.COLOR_BGR2GRAY)
 		(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
