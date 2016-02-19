@@ -48,16 +48,18 @@ def count_fingers(cnts,hand_frame,img):
 				cv2.circle(hand_frame,end,6,[255,0,255],-1)
 				cntr +=1
 
-		disp(hand_frame,"Fingers = "+str(cntr+1),(10,230))
+		disp(hand_frame,"Fingers = "+str(cntr+1),(10,80))
 
 def main():
 	while True:
 		ret,img=cap.read()
 		img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
-		cv2.rectangle(img,(0,150),(250,400),(50,50,50),2)
-		#cv2.rectangle(img,(400,0),(700,400),(0,255,0),3)
+		img = cv2.resize(img,None,fx=1.2,fy=1.2,interpolation = cv2.INTER_LINEAR)
+		cv2.rectangle(img,(0,200),(250,500),(50,50,50),2)
+		cv2.rectangle(img,(300,200),(600,500),(50,50,50),2)
 		
-		hand_frame = img[150:400,0:250]
+		hand_frame = img[200:500,0:250]
+		head_frame = img[200:500,300:600]
 
 		hsv_btn1 = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
 		lower_skin = np.array([0,7,30])
@@ -73,10 +75,8 @@ def main():
 			print "Count_fingers: ",e
 		
 		
-		#cv2.imwrite('hand_frame.jpg', hand_frame)
-		#cv2.imwrite('mask.jpg', mask)
-		cv2.imshow('mask',mask)
-		cv2.imshow('Res',res)
+		#cv2.imshow('mask',mask)
+		#cv2.imshow('Res',res)
 		cv2.imshow('Img',img)
 		
 		if cv2.waitKey(20)&0xff==ord('q'):
