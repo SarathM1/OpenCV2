@@ -71,9 +71,9 @@ def lipSegment(img):
 	#cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
 	
 	if(eccentricity < 0.88):
-		cv2.putText(img,'Commands = O',(10,200), font, 1,(0,0,255),2,16)
+		cv2.putText(img,'Commands = O',(10,300), font, 1,(0,0,255),2,16)
 	else:
-		cv2.putText(img,'Commands = E',(10,200), font, 1,(0,0,255),2,16)
+		cv2.putText(img,'Commands = E',(10,300), font, 1,(0,0,255),2,16)
 
 	#cv2.imshow('Mask',img_copy)
 	#cv2.imshow('Output', output_img)
@@ -126,21 +126,21 @@ def main():
 	while True:
 		ret,img=cap.read()
 		img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
-		img = cv2.resize(img,None,fx=1.2,fy=1.2,interpolation = cv2.INTER_LINEAR)
-		cv2.rectangle(img,(0,200),(250,500),(50,50,50),2)
-		cv2.rectangle(img,(300,100),(600,500),(50,50,50),2)
+		img = cv2.resize(img,None,fx=1.3,fy=1.2,interpolation = cv2.INTER_LINEAR)
+		cv2.rectangle(img,(0,200),(400,500),(50,50,50),2)
+		cv2.rectangle(img,(500,100),(800,500),(50,50,50),2)
 		
-		head_frame = img[100:500,300:600]
+		head_frame = img[100:500,500:800]
 		#head_frame = img.copy()
 
 		try:
-			img[100:500,300:600] = lipSegment(head_frame)	
+			img[100:500,500:800] = lipSegment(head_frame)	
 		except ValueError, e:
 			print e
-		hand_frame = img[200:500,0:250]
+		hand_frame = img[200:500,0:400]
 		hsv_btn1 = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
 		lower_skin = np.array([0,7,30])
-		upper_skin = np.array([150,90,120])
+		upper_skin = np.array([150,100,130])
 		mask = cv2.inRange(hsv_btn1,lower_skin,upper_skin)
 		res = cv2.bitwise_and(hand_frame,hand_frame,mask=mask)
 
@@ -158,6 +158,7 @@ def main():
 		#cv2.imshow('head_frame',head_frame)
 		
 		if cv2.waitKey(20)&0xff==ord('q'):
+			cv2.imwrite('output.jpg',img)
 			cv2.imwrite('hand_frame.jpg', hand_frame)
 			cv2.imwrite('mask.jpg', mask)
 			break
