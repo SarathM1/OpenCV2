@@ -39,22 +39,22 @@ def disp(img,string,coordinates):
 	cv2.putText(img,string,coordinates, font, 1,(255,0,0),2,1)
 
 def lipSegment(img):
-	img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	#img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	img = imutils.resize(img,width=300)
 	img_copy = img.copy()
-	#img = imutils.resize(img,width=300)
 
 	landmarks = dlib_obj.get_landmarks(img)
 
 	dlib_obj.get_face_mask(img_copy, landmarks)
 	output_img = img-img_copy
 	
-	#output_img = cv2.cvtColor(output_img,cv2.COLOR_BGR2GRAY)
+	output_img = cv2.cvtColor(output_img,cv2.COLOR_BGR2GRAY)
 	contours,hierarchy = cv2.findContours(output_img.copy(), cv2.cv.CV_RETR_EXTERNAL, cv2.cv.CV_CHAIN_APPROX_SIMPLE)  #cv2.findContours(image, mode, method
-	#cv2.drawContours(img, contours, -1, (0,255,0), 2,maxLevel=0)
+	cv2.drawContours(img, contours, -1, (0,255,0), 2,maxLevel=0)
 	cnt = contours[0]
 	ellipse = cv2.fitEllipse(cnt)
 	(x,y),(MA,ma),angle = cv2.fitEllipse(cnt)
-	cv2.ellipse(img,ellipse,(0,255,0),2)
+	#cv2.ellipse(img,ellipse,(0,255,0),2)
 
 	
 	a = ma/2
@@ -66,15 +66,18 @@ def lipSegment(img):
 
 	font = cv2.FONT_HERSHEY_SIMPLEX
 
-	cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
-	cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
-	cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
+	#cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
+	#cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
+	#cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
 	
-	if(eccentricity < 0.84):
-		cv2.putText(img,'Commands = O',(10,450), font, 1,(0,0,255),2,16)
+	if(eccentricity < 0.88):
+		cv2.putText(img,'Commands = O',(10,200), font, 1,(0,0,255),2,16)
 	else:
-		cv2.putText(img,'Commands = E',(10,500), font, 1,(0,0,255),2,16)
-	cv2.imshow("HEad",img)
+		cv2.putText(img,'Commands = E',(10,200), font, 1,(0,0,255),2,16)
+
+	#cv2.imshow('Mask',img_copy)
+	#cv2.imshow('Output', output_img)
+	return img
 
 def count_fingers(cnts,hand_frame,img):
 	if cnts:
@@ -127,15 +130,14 @@ def main():
 		cv2.rectangle(img,(0,200),(250,500),(50,50,50),2)
 		cv2.rectangle(img,(300,100),(600,500),(50,50,50),2)
 		
-		hand_frame = img[200:500,0:250]
 		head_frame = img[100:500,300:600]
 		#head_frame = img.copy()
 
 		try:
-			lipSegment(head_frame)	
+			img[100:500,300:600] = lipSegment(head_frame)	
 		except ValueError, e:
 			print e
-		
+		hand_frame = img[200:500,0:250]
 		hsv_btn1 = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
 		lower_skin = np.array([0,7,30])
 		upper_skin = np.array([150,90,120])
@@ -153,7 +155,7 @@ def main():
 		#cv2.imshow('mask',mask)
 		#cv2.imshow('Res',res)
 		cv2.imshow('Img',img)
-		cv2.imshow('head_frame',head_frame)
+		#cv2.imshow('head_frame',head_frame)
 		
 		if cv2.waitKey(20)&0xff==ord('q'):
 			cv2.imwrite('hand_frame.jpg', hand_frame)
