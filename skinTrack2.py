@@ -48,16 +48,16 @@ def count_fingers(cnts,btn1,img):
 				cv2.circle(btn1,end,6,[255,0,255],-1)
 				cntr +=1
 
-		disp(btn1,"No of finger's = "+str(cntr+1),(10,300))
+		disp(btn1,"Fingers = "+str(cntr+1),(10,230))
 
 def main():
 	while True:
 		ret,img=cap.read()
 		img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
-		cv2.rectangle(img,(0,100),(300,400),(50,200,0),3)
+		cv2.rectangle(img,(0,150),(250,400),(50,50,50),2)
 		#cv2.rectangle(img,(400,0),(700,400),(0,255,0),3)
 		
-		btn1 = img[100:400,0:300]
+		btn1 = img[150:400,0:250]
 
 		hsv_btn1 = cv2.cvtColor(btn1,cv2.COLOR_BGR2HSV)
 		lower_skin = np.array([0,7,30])
