@@ -36,9 +36,12 @@ def count_fingers(cnts,btn1,img):
 				start = tuple(cnt[s][0])
 				end = tuple(cnt[e][0])
 				far = tuple(cnt[f][0])
-				if d<12000:
+				if d<12400:
+					#print "Lesser: ",d
 					continue
-				
+				else:
+					print "Greater: ",d
+									
 				if far[1] >= (cy+40):
 					continue
 				else:
