@@ -79,14 +79,13 @@ def lipSegment(img):
 	return img
 
 def count_fingers(hand_frame):
-	hsv_skin = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
-	lower_skin = np.array([0,2,30])
-	upper_skin = np.array([100,100,100])
-	mask = cv2.inRange(hsv_skin,lower_skin,upper_skin)
-	res = cv2.bitwise_and(hand_frame,hand_frame,mask=mask)
+	hand_frame = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2GRAY) # To avoid error
+	ret,mask = cv2.threshold(hand_frame,100,255,cv2.THRESH_BINARY_INV)
+	
+	(cnts,_)=cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
-	(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-
+	list_far=[]
+	list_end=[]
 	if cnts:
 		areas = [cv2.contourArea(c) for c in cnts]
 		max_index = np.argmax(areas)
@@ -95,20 +94,20 @@ def count_fingers(hand_frame):
 		M = cv2.moments(cnt)
 		cx = int(M['m10']/M['m00'])
 		cy = int(M['m01']/M['m00'])
-		cv2.circle(hand_frame,(cx,cy),6,[59,53,255],-1)
+		#cv2.circle(mask,(cx,cy),6,[0,0,0],-1)
 
-		hull = cv2.convexHull(cnt)
-		cv2.drawContours(hand_frame,[hull],0,(0,0,255),2)
+		hull1 = cv2.convexHull(cnt)
+		#cv2.drawContours(mask,[hull],0,(255,255,255),2)
 
-		hull = cv2.convexHull(cnt,returnPoints = False)
+		hull2 = cv2.convexHull(cnt,returnPoints = False)
 		
 		try:
-			defects = cv2.convexityDefects(cnt,hull)
+			defects = cv2.convexityDefects(cnt,hull2)
 		except Exception, e:
 			defects = None
 			print e
 
-		cntr = 0
+		counter = 0
 		if defects is not None:
 			for i in range(defects.shape[0]):
 				s,e,f,d = defects[i,0]
@@ -123,20 +122,22 @@ def count_fingers(hand_frame):
 				else:
 					pass
 				
-				cv2.circle(hand_frame,far,6,[100,100,0],-1)
-				cv2.circle(hand_frame,end,6,[255,0,255],-1)
-				cntr +=1
-
-		disp(hand_frame,"Fingers = "+str(cntr+1),(10,80))
-	return mask
+				#cv2.circle(mask,far,6,[0,0,0],-1)
+				#cv2.circle(mask,end,6,[0,0,0],-1)
+				list_far.append(far)
+				list_end.append(end)
+				counter +=1
+		
+		cv2.imshow('hand_frame',mask)
+	return mask,counter,hull1,(cx,cy),list_far,list_end
 
 def main():
 	while True:
 		ret,img=cap.read()
-		img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
+		#img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
 		img = cv2.resize(img,None,fx=1.3,fy=1.2,interpolation = cv2.INTER_LINEAR)
-		cv2.rectangle(img,(0,200),(400,500),(50,50,50),2)
-		cv2.rectangle(img,(500,100),(800,500),(50,50,50),2)
+		cv2.rectangle(img,(0,200),(400,500),(255,255,255),1)
+		cv2.rectangle(img,(500,100),(800,500),(50,50,50),1)
 		
 		head_frame = img[100:500,500:800]
 		#head_frame = img.copy()
@@ -144,11 +145,16 @@ def main():
 		try:
 			img[100:500,500:800] = lipSegment(head_frame)	
 		except ValueError, e:
-			print e
+			#print e
+			pass
 
 		hand_frame = img[200:500,0:400]
 		try:
-			mask = count_fingers(hand_frame,img)
+			mask,counter,hull,(cx,cy),list_far,list_end = count_fingers(hand_frame)
+			cv2.drawContours(hand_frame,[hull],0,(0,255,0),1)
+			[cv2.circle(hand_frame,far,6,[0,0,0],-1) for far in list_far]
+			[cv2.circle(hand_frame,end,6,[255,255,255],-1) for end in list_end]
+			cv2.putText(img[200:500,0:400],"Fingers = "+str(counter+1),(10,250),cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255),2,1)
 		except ZeroDivisionError, e:
 			print "Count_fingers: ",e
 		
