@@ -78,7 +78,7 @@ def lipSegment(img):
 	#cv2.imshow('Output', output_img)
 	return img
 
-def count_fingers(hand_frame,img):
+def count_fingers(hand_frame):
 	hsv_skin = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
 	lower_skin = np.array([0,2,30])
 	upper_skin = np.array([100,100,100])
