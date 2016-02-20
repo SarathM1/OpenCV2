@@ -4,7 +4,6 @@ import dlib
 import imutils
 from math import sqrt
 
-
 cap=cv2.VideoCapture(0)
 
 class Dlib():
@@ -79,7 +78,15 @@ def lipSegment(img):
 	#cv2.imshow('Output', output_img)
 	return img
 
-def count_fingers(cnts,hand_frame,img):
+def count_fingers(hand_frame,img):
+	hsv_skin = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
+	lower_skin = np.array([0,2,30])
+	upper_skin = np.array([100,100,100])
+	mask = cv2.inRange(hsv_skin,lower_skin,upper_skin)
+	res = cv2.bitwise_and(hand_frame,hand_frame,mask=mask)
+
+	(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+
 	if cnts:
 		areas = [cv2.contourArea(c) for c in cnts]
 		max_index = np.argmax(areas)
@@ -108,7 +115,7 @@ def count_fingers(cnts,hand_frame,img):
 				start = tuple(cnt[s][0])
 				end = tuple(cnt[e][0])
 				far = tuple(cnt[f][0])
-				if d<12400:
+				if d<12000:
 					continue
 									
 				if far[1] >= (cy+40):
@@ -121,6 +128,7 @@ def count_fingers(cnts,hand_frame,img):
 				cntr +=1
 
 		disp(hand_frame,"Fingers = "+str(cntr+1),(10,80))
+	return mask
 
 def main():
 	while True:
@@ -137,17 +145,10 @@ def main():
 			img[100:500,500:800] = lipSegment(head_frame)	
 		except ValueError, e:
 			print e
-		hand_frame = img[200:500,0:400]
-		hsv_btn1 = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
-		lower_skin = np.array([0,7,30])
-		upper_skin = np.array([150,100,130])
-		mask = cv2.inRange(hsv_btn1,lower_skin,upper_skin)
-		res = cv2.bitwise_and(hand_frame,hand_frame,mask=mask)
 
-		(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-		
+		hand_frame = img[200:500,0:400]
 		try:
-			count_fingers(cnts,hand_frame,img)
+			mask = count_fingers(hand_frame,img)
 		except ZeroDivisionError, e:
 			print "Count_fingers: ",e
 		
@@ -161,6 +162,7 @@ def main():
 			cv2.imwrite('output.jpg',img)
 			cv2.imwrite('hand_frame.jpg', hand_frame)
 			cv2.imwrite('mask.jpg', mask)
+			cv2.imwrite('head_frame.jpg', head_frame)
 			break
 
 	cap.release()
