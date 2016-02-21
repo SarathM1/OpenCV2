@@ -156,7 +156,10 @@ def main():
 			[cv2.circle(hand_frame,end,6,[255,255,255],-1) for end in list_end]
 			cv2.putText(img[200:500,0:400],"Fingers = "+str(counter+1),(10,250),cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255),2,1)
 		except ZeroDivisionError, e:
-			print "Count_fingers: ",e
+			print "Count_fingers ZeroDivisionError: ",e
+		except UnboundLocalError,e:
+			print "Count_fingers UnboundLocalError: ",e
+
 		
 		
 		#cv2.imshow('mask',mask)
