@@ -67,9 +67,9 @@ def lipSegment(img):
 
 	#cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
 	#cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
-	#cv2.putText(img,'Eccentricity = '+str(round(eccentricity,3)),(10,400), font, 1,(255,0,0),2,16)
+	cv2.putText(img,'Eccentr= '+str(round(eccentricity,3)),(10,350), font, 1,(255,0,0),2,16)
 	
-	if(eccentricity < 0.88):
+	if(eccentricity < 0.9):
 		cv2.putText(img,'Commands = O',(10,300), font, 1,(0,0,255),2,16)
 	else:
 		cv2.putText(img,'Commands = E',(10,300), font, 1,(0,0,255),2,16)
@@ -80,7 +80,7 @@ def lipSegment(img):
 
 def count_fingers(hand_frame):
 	hand_frame = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2GRAY) # To avoid error
-	ret,mask = cv2.threshold(hand_frame,100,255,cv2.THRESH_BINARY_INV)
+	ret,mask = cv2.threshold(hand_frame,155,255,cv2.THRESH_BINARY_INV)
 	
 	(cnts,_)=cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
@@ -114,7 +114,7 @@ def count_fingers(hand_frame):
 				start = tuple(cnt[s][0])
 				end = tuple(cnt[e][0])
 				far = tuple(cnt[f][0])
-				if d<12000:
+				if d<20000:
 					continue
 									
 				if far[1] >= (cy+40):
@@ -128,7 +128,7 @@ def count_fingers(hand_frame):
 				list_end.append(end)
 				counter +=1
 		
-		cv2.imshow('hand_frame',mask)
+		#cv2.imshow('hand_frame',mask)
 	return mask,counter,hull1,(cx,cy),list_far,list_end
 
 def main():
@@ -136,8 +136,8 @@ def main():
 		ret,img=cap.read()
 		#img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
 		img = cv2.resize(img,None,fx=1.3,fy=1.2,interpolation = cv2.INTER_LINEAR)
-		cv2.rectangle(img,(0,200),(400,500),(255,255,255),1)
-		cv2.rectangle(img,(500,100),(800,500),(50,50,50),1)
+		cv2.rectangle(img,(0,50),(400,400),(255,255,255),2)
+		cv2.rectangle(img,(500,100),(800,500),(50,50,50),2)
 		
 		head_frame = img[100:500,500:800]
 		#head_frame = img.copy()
@@ -147,14 +147,16 @@ def main():
 		except ValueError, e:
 			#print e
 			pass
-
-		hand_frame = img[200:500,0:400]
+		hand_frame = img[50:400,0:400]
+		
 		try:
 			mask,counter,hull,(cx,cy),list_far,list_end = count_fingers(hand_frame)
 			cv2.drawContours(hand_frame,[hull],0,(0,255,0),1)
-			[cv2.circle(hand_frame,far,6,[0,0,0],-1) for far in list_far]
-			[cv2.circle(hand_frame,end,6,[255,255,255],-1) for end in list_end]
-			cv2.putText(img[200:500,0:400],"Fingers = "+str(counter+1),(10,250),cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255),2,1)
+			[cv2.circle(hand_frame,far,5,[0,0,0],-1) for far in list_far]
+			[cv2.circle(hand_frame,end,5,[255,255,255],-1) for end in list_end]
+
+			if(cv2.contourArea(hull)>0):
+				cv2.putText(img[50:400,0:400],"Fingers = "+str(counter+1),(10,250),cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255),2,1)
 		except ZeroDivisionError, e:
 			print "Count_fingers ZeroDivisionError: ",e
 		except UnboundLocalError,e:
