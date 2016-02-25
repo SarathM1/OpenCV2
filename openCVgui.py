@@ -22,7 +22,6 @@ class Dlib():
 	        print 'TooManyFaces'
 	    if len(rects) == 0:
 	    	raise ValueError('Error: NoFaces!!')
-	    	#print "NoFaces"
 
 	    return np.matrix([[p.x, p.y] for p in self.predictor(img, rects[0]).parts()])
 
@@ -38,7 +37,6 @@ def disp(img,string,coordinates):
 	cv2.putText(img,string,coordinates, font, 1,(255,0,0),2,1)
 
 def lipSegment(img):
-	#img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 	img = imutils.resize(img,width=300)
 	img_copy = img.copy()
 
@@ -53,8 +51,7 @@ def lipSegment(img):
 	cnt = contours[0]
 	ellipse = cv2.fitEllipse(cnt)
 	(x,y),(MA,ma),angle = cv2.fitEllipse(cnt)
-	#cv2.ellipse(img,ellipse,(0,255,0),2)
-
+	
 	
 	a = ma/2
 	b = MA/2
@@ -65,8 +62,6 @@ def lipSegment(img):
 
 	font = cv2.FONT_HERSHEY_SIMPLEX
 
-	#cv2.putText(img,'ma = '+str(round(ma,2)),(10,300), font, 1,(255,0,0),2,16)
-	#cv2.putText(img,'MA = '+str(round(MA,2)),(10,350), font, 1,(255,0,0),2,16)
 	cv2.putText(img,'Eccentr= '+str(round(eccentricity,3)),(10,350), font, 1,(255,0,0),2,16)
 	
 	if(eccentricity < 0.9):
@@ -74,15 +69,19 @@ def lipSegment(img):
 	else:
 		cv2.putText(img,'Commands = E',(10,300), font, 1,(0,0,255),2,16)
 
-	#cv2.imshow('Mask',img_copy)
-	#cv2.imshow('Output', output_img)
 	return img
 
 def count_fingers(hand_frame):
-	hand_frame = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2GRAY) # To avoid error
-	ret,mask = cv2.threshold(hand_frame,155,255,cv2.THRESH_BINARY_INV)
+	hand_frame = cv2.medianBlur(hand_frame,11)    # 5 is a fairly small kernel size
 	
-	(cnts,_)=cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+	hsv=cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
+	lower_skin=np.array([0,30,70])
+	upper_skin=np.array([180,80,230])
+	
+	mask=cv2.inRange(hsv,lower_skin,upper_skin)
+
+	cv2.imshow('Mask',mask)
+	(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
 	list_far=[]
 	list_end=[]
@@ -94,11 +93,9 @@ def count_fingers(hand_frame):
 		M = cv2.moments(cnt)
 		cx = int(M['m10']/M['m00'])
 		cy = int(M['m01']/M['m00'])
-		#cv2.circle(mask,(cx,cy),6,[0,0,0],-1)
-
+		
 		hull1 = cv2.convexHull(cnt)
-		#cv2.drawContours(mask,[hull],0,(255,255,255),2)
-
+		
 		hull2 = cv2.convexHull(cnt,returnPoints = False)
 		
 		try:
@@ -122,31 +119,28 @@ def count_fingers(hand_frame):
 				else:
 					pass
 				
-				#cv2.circle(mask,far,6,[0,0,0],-1)
-				#cv2.circle(mask,end,6,[0,0,0],-1)
 				list_far.append(far)
 				list_end.append(end)
 				counter +=1
 		
-		#cv2.imshow('hand_frame',mask)
 	return mask,counter,hull1,(cx,cy),list_far,list_end
 
 def main():
 	while True:
 		ret,img=cap.read()
 		#img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
-		img = cv2.resize(img,None,fx=1.3,fy=1.2,interpolation = cv2.INTER_LINEAR)
+		img = cv2.resize(img,None,fx=1.3,fy=1,interpolation = cv2.INTER_LINEAR)
 		cv2.rectangle(img,(0,50),(400,400),(255,255,255),2)
 		cv2.rectangle(img,(500,100),(800,500),(50,50,50),2)
 		
 		head_frame = img[100:500,500:800]
-		#head_frame = img.copy()
-
+		
 		try:
 			img[100:500,500:800] = lipSegment(head_frame)	
 		except ValueError, e:
 			#print e
 			pass
+		
 		hand_frame = img[50:400,0:400]
 		
 		try:
@@ -164,16 +158,11 @@ def main():
 
 		
 		
-		#cv2.imshow('mask',mask)
-		#cv2.imshow('Res',res)
 		cv2.imshow('Img',img)
-		#cv2.imshow('head_frame',head_frame)
 		
 		if cv2.waitKey(20)&0xff==ord('q'):
 			cv2.imwrite('output.jpg',img)
-			cv2.imwrite('hand_frame.jpg', hand_frame)
-			cv2.imwrite('mask.jpg', mask)
-			cv2.imwrite('head_frame.jpg', head_frame)
+			cv2.imwrite('Mask.jpg',mask)
 			break
 
 	cap.release()
