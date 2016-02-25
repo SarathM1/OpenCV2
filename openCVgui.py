@@ -30,6 +30,7 @@ class Dlib():
 	    for group in self.OVERLAY_POINTS:
 	        hull = cv2.convexHull(landmarks[group])
 	        cv2.fillConvexPoly(img, hull, 0)
+	        cv2.imshow('mask image',img)
 
 
 def disp(img,string,coordinates):
@@ -41,13 +42,14 @@ def lipSegment(img):
 	img_copy = img.copy()
 
 	landmarks = dlib_obj.get_landmarks(img)
-
 	dlib_obj.get_face_mask(img_copy, landmarks)
-	output_img = img-img_copy
 	
+	output_img = img-img_copy
 	output_img = cv2.cvtColor(output_img,cv2.COLOR_BGR2GRAY)
+	
 	contours,hierarchy = cv2.findContours(output_img.copy(), cv2.cv.CV_RETR_EXTERNAL, cv2.cv.CV_CHAIN_APPROX_SIMPLE)  #cv2.findContours(image, mode, method
 	cv2.drawContours(img, contours, -1, (0,255,0), 2,maxLevel=0)
+	
 	cnt = contours[0]
 	ellipse = cv2.fitEllipse(cnt)
 	(x,y),(MA,ma),angle = cv2.fitEllipse(cnt)
@@ -72,15 +74,14 @@ def lipSegment(img):
 	return img
 
 def count_fingers(hand_frame):
-	hand_frame = cv2.medianBlur(hand_frame,11)    # 5 is a fairly small kernel size
+	hand_frame = cv2.medianBlur(hand_frame,5)    # 5 is a fairly small kernel size
 	
 	hsv=cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
-	lower_skin=np.array([0,30,70])
-	upper_skin=np.array([180,80,230])
+	lower_skin=np.array([0,30,60])
+	upper_skin=np.array([180,80,255])
 	
 	mask=cv2.inRange(hsv,lower_skin,upper_skin)
 
-	cv2.imshow('Mask',mask)
 	(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
 	list_far=[]
@@ -130,13 +131,16 @@ def main():
 		ret,img=cap.read()
 		#img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
 		img = cv2.resize(img,None,fx=1.3,fy=1,interpolation = cv2.INTER_LINEAR)
-		cv2.rectangle(img,(0,50),(400,400),(255,255,255),2)
-		cv2.rectangle(img,(500,100),(800,500),(50,50,50),2)
 		
-		head_frame = img[100:500,500:800]
+		hand_box = [(0,50),(400,400)]
+		head_box = [(500,50),(800,400)]
+		cv2.rectangle(img,hand_box[0],hand_box[1],(255,255,255),2)
+		cv2.rectangle(img,head_box[0],head_box[1],(50,50,50),2)
+		
+		head_frame = img[50:400,500:800]
 		
 		try:
-			img[100:500,500:800] = lipSegment(head_frame)	
+			img[50:400,500:800] = lipSegment(head_frame)	
 		except ValueError, e:
 			#print e
 			pass
@@ -145,12 +149,13 @@ def main():
 		
 		try:
 			mask,counter,hull,(cx,cy),list_far,list_end = count_fingers(hand_frame)
-			cv2.drawContours(hand_frame,[hull],0,(0,255,0),1)
-			[cv2.circle(hand_frame,far,5,[0,0,0],-1) for far in list_far]
-			[cv2.circle(hand_frame,end,5,[255,255,255],-1) for end in list_end]
+			
+			if(cv2.contourArea(hull)>3000) and list_far:
+				cv2.drawContours(hand_frame,[hull],0,(0,255,0),1)
+				[cv2.circle(hand_frame,far,5,[0,0,0],-1) for far in list_far]
+				[cv2.circle(hand_frame,end,5,[150,150,150],-1) for end in list_end]
+				cv2.putText(hand_frame,"Fingers = "+str(counter+1),(10,250),cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255),2,1)
 
-			if(cv2.contourArea(hull)>0):
-				cv2.putText(img[50:400,0:400],"Fingers = "+str(counter+1),(10,250),cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255),2,1)
 		except ZeroDivisionError, e:
 			print "Count_fingers ZeroDivisionError: ",e
 		except UnboundLocalError,e:
