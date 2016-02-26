@@ -30,7 +30,6 @@ class Dlib():
 	    for group in self.OVERLAY_POINTS:
 	        hull = cv2.convexHull(landmarks[group])
 	        cv2.fillConvexPoly(img, hull, 0)
-	        cv2.imshow('mask image',img)
 
 
 def disp(img,string,coordinates):
@@ -74,14 +73,12 @@ def lipSegment(img):
 	return img
 
 def count_fingers(hand_frame):
-	hand_frame = cv2.medianBlur(hand_frame,5)    # 5 is a fairly small kernel size
-	
-	hsv=cv2.cvtColor(hand_frame,cv2.COLOR_BGR2HSV)
-	lower_skin=np.array([0,30,60])
-	upper_skin=np.array([180,80,255])
-	
-	mask=cv2.inRange(hsv,lower_skin,upper_skin)
+	hand_frame = cv2.cvtColor(hand_frame,cv2.COLOR_BGR2GRAY)
 
+	# Otsu's thresholding after Gaussian filtering
+	hand_frame = cv2.GaussianBlur(hand_frame,(5,5),0)
+   	ret,mask = cv2.threshold(hand_frame,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+	
 	(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
 	list_far=[]
@@ -168,6 +165,7 @@ def main():
 		if cv2.waitKey(20)&0xff==ord('q'):
 			cv2.imwrite('output.jpg',img)
 			cv2.imwrite('Mask.jpg',mask)
+			cv2.imwrite('hand_frame.jpg',hand_frame)
 			break
 
 	cap.release()
