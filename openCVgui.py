@@ -124,6 +124,10 @@ def count_fingers(hand_frame):
 	return mask,counter,hull1,(cx,cy),list_far,list_end
 
 def main():
+	print "\t\t########################################"
+	print "\t\tOPTIMISED = ",cv2.useOptimized()," !!!!"
+	print "\t\t########################################"
+
 	while True:
 		ret,img=cap.read()
 		#img = cv2.medianBlur(img,3)    # 5 is a fairly small kernel size
@@ -135,13 +139,12 @@ def main():
 		cv2.rectangle(img,head_box[0],head_box[1],(50,50,50),2)
 		
 		head_frame = img[50:400,500:800]
-		
 		try:
 			img[50:400,500:800] = lipSegment(head_frame)	
 		except ValueError, e:
 			#print e
 			pass
-		
+
 		hand_frame = img[50:400,0:400]
 		
 		try:
