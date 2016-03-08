@@ -18,10 +18,19 @@ class Flags():
 	def set_fwd(self):
 		self.isSet_fwd = True
 		self.isSet_back = False
+		self.isSet_stop = False
 
 	def set_back(self):
 		self.isSet_back = True
 		self.isSet_fwd = False
+		self.isSet_stop = False
+
+	def set_stop(self):
+		self.isSet_stop = True
+		self.isSet_fwd = False
+		self.isSet_back = False
+		self.isSet_left = False
+		self.isSet_right = False
 
 class Dlib():
 	def __init__(self):
@@ -101,8 +110,10 @@ class Video():
 		try:
 			img[y3:y4,x3:x4] = self.lipSegment(head_frame)
 		except ValueError, e:
-			#print 'processFrame: ',e
+			print 'processFrame: ',e
+			flags.set_stop()
 			pass		# To suppress No face Error
+
 
 		hand_frame = img[y1:y2,x1:x2]
 			
@@ -250,6 +261,11 @@ class Gui(QtGui.QMainWindow):
 			self.ui.right_arrow.setEnabled(True)
 		else:
 			self.ui.right_arrow.setEnabled(False)
+
+		if flags.isSet_stop:
+			self.ui.stop.setStyleSheet('background-color :rgb(255, 0, 0) ;border-color: rgb(42, 42, 42);')
+		else:
+			self.ui.stop.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
 		
 
 def main():

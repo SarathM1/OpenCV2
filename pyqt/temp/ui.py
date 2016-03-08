@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Wed Mar  9 00:00:16 2016
+# Created: Wed Mar  9 00:41:54 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -78,12 +78,12 @@ class Ui_MainWindow(object):
         self.right_arrow.setArrowType(QtCore.Qt.RightArrow)
         self.right_arrow.setObjectName(_fromUtf8("right_arrow"))
         self.gridLayout.addWidget(self.right_arrow, 2, 1, 1, 1)
-        self.pushButton = QtGui.QPushButton(self.gridLayoutWidget)
-        self.pushButton.setStyleSheet(_fromUtf8("background-color :rgb(197, 197, 197) ;\n"
+        self.stop = QtGui.QPushButton(self.gridLayoutWidget)
+        self.stop.setStyleSheet(_fromUtf8("background-color :rgb(197, 197, 197) ;\n"
 "border-color: rgb(42, 42, 42);"))
-        self.pushButton.setText(_fromUtf8(""))
-        self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.gridLayout.addWidget(self.pushButton, 0, 0, 1, 1)
+        self.stop.setText(_fromUtf8(""))
+        self.stop.setObjectName(_fromUtf8("stop"))
+        self.gridLayout.addWidget(self.stop, 0, 0, 1, 1)
         self.line_2 = QtGui.QFrame(self.centralwidget)
         self.line_2.setGeometry(QtCore.QRect(0, 270, 161, 20))
         self.line_2.setFrameShape(QtGui.QFrame.HLine)
