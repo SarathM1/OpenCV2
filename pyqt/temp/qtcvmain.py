@@ -49,7 +49,8 @@ class Video():
 		try:
 			readFrame = self.lipSegment(readFrame)
 		except ValueError, e:
-			print e
+			#print e
+			pass
 		
 		if not ret :
 			print "Error reading Frame!!"
@@ -114,7 +115,7 @@ class Gui(QtGui.QMainWindow):
 		self.video = Video(cv2.VideoCapture(0))
 		self._timer = QtCore.QTimer(self)
 		self._timer.timeout.connect(self.play)
-		self._timer.start(27)
+		self._timer.start(20)
 		self.update()
  
 	def play(self):

@@ -2,7 +2,8 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created by: PyQt4 UI code generator 4.10.4
+# Created: Tue Mar  8 21:28:49 2016
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -25,16 +26,16 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(823, 602)
+        MainWindow.resize(1229, 664)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.videoFrame = QtGui.QLabel(self.centralwidget)
-        self.videoFrame.setGeometry(QtCore.QRect(40, 32, 721, 521))
+        self.videoFrame.setGeometry(QtCore.QRect(40, 32, 1181, 581))
         self.videoFrame.setText(_fromUtf8(""))
         self.videoFrame.setObjectName(_fromUtf8("videoFrame"))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 823, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1229, 27))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
@@ -45,5 +46,5 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "OpenCV", None))
 

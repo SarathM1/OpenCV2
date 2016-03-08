@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>823</width>
-    <height>602</height>
+    <width>1229</width>
+    <height>664</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>OpenCV</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="videoFrame">
@@ -19,8 +19,8 @@
      <rect>
       <x>40</x>
       <y>32</y>
-      <width>721</width>
-      <height>521</height>
+      <width>1181</width>
+      <height>581</height>
      </rect>
     </property>
     <property name="text">
@@ -33,7 +33,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>823</width>
+     <width>1229</width>
      <height>27</height>
     </rect>
    </property>
