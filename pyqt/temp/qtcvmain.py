@@ -8,6 +8,8 @@ import dlib
 import imutils
 from math import sqrt
 
+class Flags():
+	isSet_fwd = False
 
 class Dlib():
 	def __init__(self):
@@ -137,8 +139,10 @@ class Video():
 		
 		if(eccentricity < 0.9):
 			cv2.putText(img,'Cmd = O',(10,300), self.font, 1,(0,0,255),1,16)
+			flags.isSet_fwd = False
 		else:
 			cv2.putText(img,'Cmd = E',(10,300), self.font, 1,(0,0,255),1,16)
+			flags.isSet_fwd = True
 
 		return img
 
@@ -210,6 +214,11 @@ class Gui(QtGui.QMainWindow):
 			self.ui.videoFrame.setPixmap(
 				self.video.convertFrame())
 			self.ui.videoFrame.setScaledContents(True)
+			if flags.isSet_fwd:
+				self.ui.up_arrow.setEnabled(True)
+			else:
+				self.ui.up_arrow.setEnabled(False)
+			
 		except Exception,e:
 			print "play(): ",e
  
@@ -220,4 +229,5 @@ def main():
 	sys.exit(app.exec_())
  
 if __name__ == '__main__':
+	flags = Flags()
 	main()
