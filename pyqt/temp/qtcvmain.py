@@ -86,7 +86,7 @@ class Video():
 		try:
 			img[y3:y4,x3:x4] = self.lipSegment(head_frame)
 		except ValueError, e:
-			print e
+			print 'processFrame: ',e
 			#pass		# To suppress No face Error
 		return img
 
