@@ -10,6 +10,18 @@ from math import sqrt
 
 class Flags():
 	isSet_fwd = False
+	isSet_back = False
+	isSet_left = False
+	isSet_right = False
+	isSet_stop = False
+
+	def set_fwd(self):
+		self.isSet_fwd = True
+		self.isSet_back = False
+
+	def set_back(self):
+		self.isSet_back = True
+		self.isSet_fwd = False
 
 class Dlib():
 	def __init__(self):
@@ -139,10 +151,10 @@ class Video():
 		
 		if(eccentricity < 0.9):
 			cv2.putText(img,'Cmd = O',(10,300), self.font, 1,(0,0,255),1,16)
-			flags.isSet_fwd = False
+			flags.set_back()
 		else:
 			cv2.putText(img,'Cmd = E',(10,300), self.font, 1,(0,0,255),1,16)
-			flags.isSet_fwd = True
+			flags.set_fwd()
 
 		return img
 
@@ -214,14 +226,32 @@ class Gui(QtGui.QMainWindow):
 			self.ui.videoFrame.setPixmap(
 				self.video.convertFrame())
 			self.ui.videoFrame.setScaledContents(True)
-			if flags.isSet_fwd:
-				self.ui.up_arrow.setEnabled(True)
-			else:
-				self.ui.up_arrow.setEnabled(False)
-			
+			self.checkFlags()
 		except Exception,e:
 			print "play(): ",e
- 
+	
+	def checkFlags(self): 
+		if flags.isSet_fwd:
+			self.ui.up_arrow.setEnabled(True)
+		else:
+			self.ui.up_arrow.setEnabled(False)
+		
+		if flags.isSet_back:
+			self.ui.down_arrow.setEnabled(True)
+		else:
+			self.ui.down_arrow.setEnabled(False)
+		
+		if flags.isSet_left:
+			self.ui.left_arrow.setEnabled(True)
+		else:
+			self.ui.left_arrow.setEnabled(False)
+		
+		if flags.isSet_right:
+			self.ui.right_arrow.setEnabled(True)
+		else:
+			self.ui.right_arrow.setEnabled(False)
+		
+
 def main():
 	app = QtGui.QApplication(sys.argv)
 	ex = Gui()
