@@ -46,15 +46,11 @@ class Video():
 		"""
 		ret, readFrame=self.capture.read()
 		
-		try:
-			readFrame = self.lipSegment(readFrame)
-		except ValueError, e:
-			#print e
-			pass
-		
 		if not ret :
 			print "Error reading Frame!!"
 			sys.exit(0)
+
+		readFrame = self.processFrame(readFrame)
 		self.currentFrame=cv2.cvtColor(readFrame,cv2.COLOR_BGR2RGB)
  
 	def convertFrame(self):
@@ -71,8 +67,31 @@ class Video():
 		except Exception,e:
 			print "convertFrame: ",e
 			return None
+	
+	def processFrame(self,img):
+		x1=0		# hand_box = [(x1,y1),(x2,y2)]
+		y1=50
+		x2=300
+		y2=400
+
+		x3=350		# head_box = [(x3,y3),(x4,y4)]
+		y3=50
+		x4=600
+		y4=400
+
+		cv2.rectangle(img,(x1,y1),(x2,y2),(255,255,255),1)
+		cv2.rectangle(img,(x3,y3),(x4,y4),(50,50,50),1)
+
+		head_frame = img[y3:y4,x3:x4]
+		try:
+			img[y3:y4,x3:x4] = self.lipSegment(head_frame)
+		except ValueError, e:
+			print e
+			#pass		# To suppress No face Error
+		return img
+
 	def lipSegment(self,img):
-		#img = imutils.resize(img,width=300)
+		img = imutils.resize(img,width=250,height=350)
 		img_copy = img.copy()
 
 		landmarks = self.dlib_obj.get_landmarks(img)
@@ -98,12 +117,12 @@ class Video():
 
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
-		cv2.putText(img,'Eccentr= '+str(round(eccentricity,3)),(10,350), font, 1,(255,0,0),2,16)
+		cv2.putText(img,'E = '+str(round(eccentricity,3)),(10,350), font, 1,(255,0,0),1)
 		
 		if(eccentricity < 0.9):
-			cv2.putText(img,'Commands = O',(10,300), font, 1,(0,0,255),2,16)
+			cv2.putText(img,'Cmd = O',(10,300), font, 1,(0,0,255),1)
 		else:
-			cv2.putText(img,'Commands = E',(10,300), font, 1,(0,0,255),2,16)
+			cv2.putText(img,'Cmd = E',(10,300), font, 1,(0,0,255),1)
 
 		return img			
  
@@ -124,8 +143,8 @@ class Gui(QtGui.QMainWindow):
 			self.ui.videoFrame.setPixmap(
 				self.video.convertFrame())
 			self.ui.videoFrame.setScaledContents(True)
-		except TypeError:
-			print "No frame"
+		except Exception,e:
+			print "play(): ",e
  
 def main():
 	app = QtGui.QApplication(sys.argv)
