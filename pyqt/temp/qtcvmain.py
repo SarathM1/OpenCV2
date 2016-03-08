@@ -40,6 +40,7 @@ class Video():
 		self.capture = capture
 		self.currentFrame=np.array([])
  		self.dlib_obj = Dlib()
+ 		self.font = cv2.FONT_HERSHEY_SIMPLEX
 	def captureNextFrame(self):
 		"""                           
 		capture frame and reverse RBG BGR and return opencv image                                      
@@ -86,8 +87,25 @@ class Video():
 		try:
 			img[y3:y4,x3:x4] = self.lipSegment(head_frame)
 		except ValueError, e:
-			print 'processFrame: ',e
-			#pass		# To suppress No face Error
+			#print 'processFrame: ',e
+			pass		# To suppress No face Error
+
+		hand_frame = img[y1:y2,x1:x2]
+			
+		try:
+			mask,counter,hull,(cx,cy),list_far,list_end = self.count_fingers(hand_frame)
+			
+			if(cv2.contourArea(hull)>3000) and list_far:
+				cv2.drawContours(hand_frame,[hull],0,(0,255,0),1)
+				[cv2.circle(hand_frame,far,5,[0,0,0],-1) for far in list_far]
+				[cv2.circle(hand_frame,end,5,[150,150,150],-1) for end in list_end]
+				cv2.putText(hand_frame,"Fingers = "+str(counter+1),(10,250),self.font, 1,(0,0,255),1,1)
+
+		except ZeroDivisionError, e:
+			print "Count_fingers ZeroDivisionError: ",e
+		except UnboundLocalError,e:
+			print "Count_fingers UnboundLocalError: ",e
+
 		return img
 
 	def lipSegment(self,img):
@@ -101,7 +119,7 @@ class Video():
 		output_img = cv2.cvtColor(output_img,cv2.COLOR_BGR2GRAY)
 		
 		contours,hierarchy = cv2.findContours(output_img.copy(), cv2.cv.CV_RETR_EXTERNAL, cv2.cv.CV_CHAIN_APPROX_SIMPLE)  #cv2.findContours(image, mode, method
-		cv2.drawContours(img, contours, -1, (0,255,0), 2,maxLevel=0)
+		cv2.drawContours(img, contours, -1, (0,0,255), 1,maxLevel=0)
 		
 		cnt = contours[0]
 		ellipse = cv2.fitEllipse(cnt)
@@ -115,16 +133,65 @@ class Video():
 		eccentricity = sqrt(pow(a,2)-pow(b,2))
 		eccentricity = round(eccentricity/a,2)
 
-		font = cv2.FONT_HERSHEY_SIMPLEX
-
-		cv2.putText(img,'E = '+str(round(eccentricity,3)),(10,350), font, 1,(255,0,0),1)
+		cv2.putText(img,'E = '+str(round(eccentricity,3)),(10,350), self.font, 1,(255,0,0),1)
 		
 		if(eccentricity < 0.9):
-			cv2.putText(img,'Cmd = O',(10,300), font, 1,(0,0,255),1)
+			cv2.putText(img,'Cmd = O',(10,300), self.font, 1,(0,0,255),1,16)
 		else:
-			cv2.putText(img,'Cmd = E',(10,300), font, 1,(0,0,255),1)
+			cv2.putText(img,'Cmd = E',(10,300), self.font, 1,(0,0,255),1,16)
 
-		return img			
+		return img
+
+	def count_fingers(self,img):
+		img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+
+		# Otsu's thresholding after Gaussian filtering
+		img = cv2.GaussianBlur(img,(5,5),0)
+		ret,mask = cv2.threshold(img,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+		
+		(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+
+		list_far=[]
+		list_end=[]
+		if cnts:
+			areas = [cv2.contourArea(c) for c in cnts]
+			max_index = np.argmax(areas)
+			cnt=cnts[max_index]
+
+			M = cv2.moments(cnt)
+			cx = int(M['m10']/M['m00'])
+			cy = int(M['m01']/M['m00'])
+			
+			hull1 = cv2.convexHull(cnt)
+			
+			hull2 = cv2.convexHull(cnt,returnPoints = False)
+			
+			try:
+				defects = cv2.convexityDefects(cnt,hull2)
+			except Exception, e:
+				defects = None
+				print e
+
+			counter = 0
+			if defects is not None:
+				for i in range(defects.shape[0]):
+					s,e,f,d = defects[i,0]
+					start = tuple(cnt[s][0])
+					end = tuple(cnt[e][0])
+					far = tuple(cnt[f][0])
+					if d<20000:
+						continue
+										
+					if far[1] >= (cy+40):
+						continue
+					else:
+						pass
+					
+					list_far.append(far)
+					list_end.append(end)
+					counter +=1
+			
+		return mask,counter,hull1,(cx,cy),list_far,list_end			
  
 class Gui(QtGui.QMainWindow):
 	def __init__(self,parent=None):
