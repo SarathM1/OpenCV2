@@ -14,7 +14,10 @@ class Flags():
 	isSet_left = False
 	isSet_right = False
 	isSet_stop = False
-	
+	prev_button = False
+	cur_button = False
+	isSet_button = False
+
 	def set_fwd(self):
 		self.isSet_fwd = True
 		self.isSet_back = False
@@ -113,48 +116,55 @@ class Video():
 	
 	def processFrame(self,img):
 		x1=0		# hand_box = [(x1,y1),(x2,y2)]
-		y1=100
-		x2=250
-		y2=500
+		y1=0
+		x2=300
+		y2=400
 
-		x3=300		# head_box = [(x3,y3),(x4,y4)]
+		x3=250		# head_box = [(x3,y3),(x4,y4)]
 		y3=100
 		x4=600
 		y4=500
 
-		img = self.checkButton(img)
-		cv2.rectangle(img,(x1,y1),(x2,y2),(255,255,255),1)
-		cv2.rectangle(img,(x3,y3),(x4,y4),(50,50,50),1)
+		x5 = 550	# Button
+		x6 = 650
+		y5 = 0
+		y6 = 50
+		
+		img = self.checkButton(img,x5,y5,x6,y6)
 
-		head_frame = img[y3:y4,x3:x4]
-		try:
-			img[y3:y4,x3:x4] = self.lipSegment(head_frame)
-		except ValueError, e:
-			#print 'processFrame: ',e
-			flags.set_stop()
-			pass		# To suppress No face Error
+		if flags.isSet_button:
+			cv2.rectangle(img,(x3,y3),(x4,y4),(50,50,50),1)
 
+			head_frame = img[y3:y4,x3:x4]
+			try:
+				img[y3:y4,x3:x4] = self.lipSegment(head_frame)
+			except ValueError, e:
+				#print 'processFrame: ',e
+				flags.set_stop()
+				pass		# To suppress No face Error
 
-		hand_frame = img[y1:y2,x1:x2]
-			
-		try:
-			mask,counter,hull,(cx,cy),list_far,list_end = self.count_fingers(hand_frame)
-			
-			if(cv2.contourArea(hull)>3000) and list_far:
-				cv2.drawContours(hand_frame,[hull],0,(0,255,0),1)
-				[cv2.circle(hand_frame,far,5,[0,0,0],-1) for far in list_far]
-				[cv2.circle(hand_frame,end,5,[150,150,150],-1) for end in list_end]
-				cv2.putText(hand_frame,"Fingers = "+str(counter+1),(10,250),self.font, 1,(0,0,255),1,1)
+		else:
+			cv2.rectangle(img,(x1,y1),(x2,y2),(255,255,255),1)
+			hand_frame = img[y1:y2,x1:x2]
+				
+			try:
+				mask,counter,hull,(cx,cy),list_far,list_end = self.count_fingers(hand_frame)
+				
+				if(cv2.contourArea(hull)>3000) and list_far:
+					cv2.drawContours(hand_frame,[hull],0,(0,255,0),1)
+					[cv2.circle(hand_frame,far,5,[0,0,0],-1) for far in list_far]
+					[cv2.circle(hand_frame,end,5,[150,150,150],-1) for end in list_end]
+					cv2.putText(hand_frame,"Fingers = "+str(counter+1),(10,250),self.font, 1,(0,0,255),1,1)
 
-		except ZeroDivisionError, e:
-			print "Count_fingers ZeroDivisionError: ",e
-		except UnboundLocalError,e:
-			print "Count_fingers UnboundLocalError: ",e
+			except ZeroDivisionError, e:
+				print "Count_fingers ZeroDivisionError: ",e
+			except UnboundLocalError,e:
+				print "Count_fingers UnboundLocalError: ",e
 
 		return img
 
-	def checkButton(self,img):
-		btn1 = img[0:100,250:350]
+	def checkButton(self,img,x1,y1,x2,y2):
+		btn1 = img[y1:y2,x1:x2]
 		btn1 = cv2.cvtColor(btn1,cv2.COLOR_BGR2GRAY)
 		ret,mask = cv2.threshold(btn1,150,255,cv2.THRESH_BINARY_INV)
 		(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)	
@@ -179,19 +189,22 @@ class Video():
 		#cv2.drawContours(btn1,cnt,-1,(0,255,0),1)
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
+		flags.prev_button = flags.cur_button
 		if cnt is not None:
-			cv2.rectangle(img,(250,0),(350,50),(0,0,0),1)
+			cv2.rectangle(img,(x1,y1),(x2,y2),(0,0,0),1)
 			hull = cv2.convexHull(cnt)
 			cv2.drawContours(btn1,[hull],0,(0,0,255),1)
-			cv2.putText(img,"Btn1",(0,50), font, 1,(255,0,0),1,16)
+			#cv2.putText(img,"Btn1",(0,50), font, 1,(255,0,0),1,16)
+			flags.cur_button = True
 		else:
-			cv2.rectangle(img,(250,0),(350,50),(188,188,137),1)
-
+			cv2.rectangle(img,(x1,y1),(x2,y2),(188,188,137),1)
+			flags.cur_button = False
+		cv2.putText(img,str(flags.cur_button),(0,50), font, 1,(255,0,0),1,16)
 		#cv2.imshow('Img',img)
 		return img
 	
 	def lipSegment(self,img):
-		img = imutils.resize(img,width=300,height=400)
+		img = imutils.resize(img,width=350,height=400)
 		img_copy = img.copy()
 
 		landmarks = self.dlib_obj.get_landmarks(img)
@@ -330,6 +343,14 @@ class Gui(QtGui.QMainWindow):
 		else:
 			self.ui.stop.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
 		
+		if flags.prev_button == False and flags.cur_button == True:
+			flags.isSet_button = not flags.isSet_button
+
+
+		if flags.isSet_button:
+			self.ui.button.setStyleSheet('background-color :rgb(255, 0, 0) ;border-color: rgb(42, 42, 42);')
+		else:
+			self.ui.button.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
 
 def main():
 	app = QtGui.QApplication(sys.argv)

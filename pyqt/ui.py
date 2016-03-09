@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Wed Mar  9 00:41:54 2016
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -37,7 +36,6 @@ class Ui_MainWindow(object):
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 50, 141, 221))
         self.verticalLayoutWidget.setObjectName(_fromUtf8("verticalLayoutWidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setMargin(0)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.start_button = QtGui.QPushButton(self.verticalLayoutWidget)
         self.start_button.setObjectName(_fromUtf8("start_button"))
@@ -52,7 +50,6 @@ class Ui_MainWindow(object):
         self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 290, 141, 171))
         self.gridLayoutWidget.setObjectName(_fromUtf8("gridLayoutWidget"))
         self.gridLayout = QtGui.QGridLayout(self.gridLayoutWidget)
-        self.gridLayout.setMargin(0)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.up_arrow = QtGui.QToolButton(self.gridLayoutWidget)
         self.up_arrow.setEnabled(False)
@@ -108,7 +105,6 @@ class Ui_MainWindow(object):
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 480, 141, 51))
         self.horizontalLayoutWidget.setObjectName(_fromUtf8("horizontalLayoutWidget"))
         self.horizontalLayout = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout.setMargin(0)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.label = QtGui.QLabel(self.horizontalLayoutWidget)
         self.label.setEnabled(True)
@@ -122,7 +118,6 @@ class Ui_MainWindow(object):
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(10, 540, 141, 51))
         self.horizontalLayoutWidget_2.setObjectName(_fromUtf8("horizontalLayoutWidget_2"))
         self.horizontalLayout_3 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
-        self.horizontalLayout_3.setMargin(0)
         self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
         self.label_2 = QtGui.QLabel(self.horizontalLayoutWidget_2)
         self.label_2.setEnabled(True)
@@ -130,12 +125,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.label_2)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
-        self.pushButton_2 = QtGui.QPushButton(self.horizontalLayoutWidget_2)
-        self.pushButton_2.setStyleSheet(_fromUtf8("background-color :rgb(197, 197, 197) ;\n"
+        self.button = QtGui.QPushButton(self.horizontalLayoutWidget_2)
+        self.button.setStyleSheet(_fromUtf8("background-color :rgb(197, 197, 197) ;\n"
 "border-color: rgb(42, 42, 42);"))
-        self.pushButton_2.setText(_fromUtf8(""))
-        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-        self.horizontalLayout_3.addWidget(self.pushButton_2)
+        self.button.setText(_fromUtf8(""))
+        self.button.setObjectName(_fromUtf8("button"))
+        self.horizontalLayout_3.addWidget(self.button)
         spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem1)
         MainWindow.setCentralWidget(self.centralwidget)

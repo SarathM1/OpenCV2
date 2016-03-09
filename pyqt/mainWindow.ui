@@ -250,7 +250,7 @@ border-color: rgb(42, 42, 42);</string>
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="button">
        <property name="styleSheet">
         <string notr="true">background-color :rgb(197, 197, 197) ;
 border-color: rgb(42, 42, 42);</string>
@@ -275,16 +275,6 @@ border-color: rgb(42, 42, 42);</string>
      </item>
     </layout>
    </widget>
-   <zorder>videoFrame</zorder>
-   <zorder>verticalLayoutWidget</zorder>
-   <zorder>gridLayoutWidget</zorder>
-   <zorder>line_2</zorder>
-   <zorder>line_3</zorder>
-   <zorder>line_4</zorder>
-   <zorder>line_5</zorder>
-   <zorder>horizontalLayoutWidget</zorder>
-   <zorder>horizontalLayoutWidget_2</zorder>
-   <zorder>stop_button_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
