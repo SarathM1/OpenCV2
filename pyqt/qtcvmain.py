@@ -14,7 +14,7 @@ class Flags():
 	isSet_left = False
 	isSet_right = False
 	isSet_stop = False
-
+	
 	def set_fwd(self):
 		self.isSet_fwd = True
 		self.isSet_back = False
@@ -49,6 +49,7 @@ class Flags():
 		self.isSet_back = False
 		self.isSet_left = False
 		self.isSet_right = False
+
 
 class Dlib():
 	def __init__(self):
@@ -112,15 +113,16 @@ class Video():
 	
 	def processFrame(self,img):
 		x1=0		# hand_box = [(x1,y1),(x2,y2)]
-		y1=50
+		y1=100
 		x2=250
 		y2=500
 
 		x3=300		# head_box = [(x3,y3),(x4,y4)]
-		y3=50
+		y3=100
 		x4=600
 		y4=500
 
+		img = self.checkButton(img)
 		cv2.rectangle(img,(x1,y1),(x2,y2),(255,255,255),1)
 		cv2.rectangle(img,(x3,y3),(x4,y4),(50,50,50),1)
 
@@ -151,8 +153,45 @@ class Video():
 
 		return img
 
+	def checkButton(self,img):
+		btn1 = img[0:100,250:350]
+		btn1 = cv2.cvtColor(btn1,cv2.COLOR_BGR2GRAY)
+		ret,mask = cv2.threshold(btn1,150,255,cv2.THRESH_BINARY_INV)
+		(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)	
+		
+		res = cv2.bitwise_and(btn1,btn1,mask=mask)
+
+		(cnts,_)=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+		ci = 0
+		max_area = 0
+		
+		if cnts:
+			for i in range(len(cnts)):
+				cnt=cnts[i]
+				area = cv2.contourArea(cnt)
+				if(area>max_area):
+					max_area=area
+					ci=i
+			cnt = cnts[ci]
+		
+		else:
+			cnt = None
+		#cv2.drawContours(btn1,cnt,-1,(0,255,0),1)
+		font = cv2.FONT_HERSHEY_SIMPLEX
+
+		if cnt is not None:
+			cv2.rectangle(img,(250,0),(350,50),(0,0,0),1)
+			hull = cv2.convexHull(cnt)
+			cv2.drawContours(btn1,[hull],0,(0,0,255),1)
+			cv2.putText(img,"Btn1",(0,50), font, 1,(255,0,0),1,16)
+		else:
+			cv2.rectangle(img,(250,0),(350,50),(188,188,137),1)
+
+		#cv2.imshow('Img',img)
+		return img
+	
 	def lipSegment(self,img):
-		img = imutils.resize(img,width=300,height=450)
+		img = imutils.resize(img,width=300,height=400)
 		img_copy = img.copy()
 
 		landmarks = self.dlib_obj.get_landmarks(img)
@@ -256,14 +295,14 @@ class Gui(QtGui.QMainWindow):
 		self.update()
  
 	def play(self):
-		try:
-			self.video.captureNextFrame()
-			self.ui.videoFrame.setPixmap(
-				self.video.convertFrame())
-			self.ui.videoFrame.setScaledContents(True)
-			self.checkFlags()
-		except Exception,e:
-			print "play(): ",e
+		#try:
+		self.video.captureNextFrame()
+		self.ui.videoFrame.setPixmap(
+			self.video.convertFrame())
+		self.ui.videoFrame.setScaledContents(True)
+		self.checkFlags()
+		#except Exception,e:
+		#	print "play(): ",e
 	
 	def checkFlags(self): 
 		if flags.isSet_fwd:
