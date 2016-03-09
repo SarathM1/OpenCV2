@@ -19,10 +19,28 @@ class Flags():
 		self.isSet_fwd = True
 		self.isSet_back = False
 		self.isSet_stop = False
+		self.isSet_left = False
+		self.isSet_right = False
 
 	def set_back(self):
 		self.isSet_back = True
 		self.isSet_fwd = False
+		self.isSet_stop = False
+		self.isSet_left = False
+		self.isSet_right = False
+
+	def set_left(self):
+		self.isSet_left = True
+		self.isSet_right = False
+		self.isSet_fwd = False
+		self.isSet_back = False
+		self.isSet_stop = False
+
+	def set_right(self):
+		self.isSet_right = True
+		self.isSet_left = False
+		self.isSet_fwd = False
+		self.isSet_back = False
 		self.isSet_stop = False
 
 	def set_stop(self):
@@ -34,7 +52,7 @@ class Flags():
 
 class Dlib():
 	def __init__(self):
-		self.PREDICTOR_PATH = "/home/sm/Documents/SkinDetection/shape_predictor_68_face_landmarks.dat"
+		self.PREDICTOR_PATH = "/home/wa/Documents/OpenCV2/shape_predictor_68_face_landmarks.dat"
 		MOUTH_POINTS = list(range(48, 61))
 		self.OVERLAY_POINTS = [MOUTH_POINTS]
 
@@ -95,13 +113,13 @@ class Video():
 	def processFrame(self,img):
 		x1=0		# hand_box = [(x1,y1),(x2,y2)]
 		y1=50
-		x2=300
-		y2=400
+		x2=250
+		y2=500
 
-		x3=350		# head_box = [(x3,y3),(x4,y4)]
+		x3=300		# head_box = [(x3,y3),(x4,y4)]
 		y3=50
 		x4=600
-		y4=400
+		y4=500
 
 		cv2.rectangle(img,(x1,y1),(x2,y2),(255,255,255),1)
 		cv2.rectangle(img,(x3,y3),(x4,y4),(50,50,50),1)
@@ -110,7 +128,7 @@ class Video():
 		try:
 			img[y3:y4,x3:x4] = self.lipSegment(head_frame)
 		except ValueError, e:
-			print 'processFrame: ',e
+			#print 'processFrame: ',e
 			flags.set_stop()
 			pass		# To suppress No face Error
 
@@ -134,7 +152,7 @@ class Video():
 		return img
 
 	def lipSegment(self,img):
-		img = imutils.resize(img,width=250,height=350)
+		img = imutils.resize(img,width=300,height=450)
 		img_copy = img.copy()
 
 		landmarks = self.dlib_obj.get_landmarks(img)
@@ -167,6 +185,12 @@ class Video():
 			cv2.putText(img,'Cmd = E',(10,300), self.font, 1,(0,0,255),1,16)
 			flags.set_fwd()
 
+		if angle < 80:
+			flags.set_left()
+		elif angle>100:
+			flags.set_right()
+
+		#cv2.putText(img,'Angle = '+str(angle),(10,300),self.font,1,(0,0,255),1,16)
 		return img
 
 	def count_fingers(self,img):
