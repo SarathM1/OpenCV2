@@ -23,6 +23,8 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_MainWindow(object):
+    latch_button_state = False
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1451, 664)
@@ -33,21 +35,18 @@ class Ui_MainWindow(object):
         self.videoFrame.setText(_fromUtf8(""))
         self.videoFrame.setObjectName(_fromUtf8("videoFrame"))
         self.verticalLayoutWidget = QtGui.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 50, 141, 221))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 90, 141, 101))
         self.verticalLayoutWidget.setObjectName(_fromUtf8("verticalLayoutWidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.start_button = QtGui.QPushButton(self.verticalLayoutWidget)
-        self.start_button.setObjectName(_fromUtf8("start_button"))
-        self.verticalLayout.addWidget(self.start_button)
-        self.stop_button = QtGui.QPushButton(self.verticalLayoutWidget)
-        self.stop_button.setObjectName(_fromUtf8("stop_button"))
-        self.verticalLayout.addWidget(self.stop_button)
-        self.quit_button = QtGui.QPushButton(self.verticalLayoutWidget)
-        self.quit_button.setObjectName(_fromUtf8("quit_button"))
-        self.verticalLayout.addWidget(self.quit_button)
+        self.latch_button = QtGui.QToolButton(self.verticalLayoutWidget)
+        self.latch_button.setAutoRepeat(True)
+        self.latch_button.setObjectName(_fromUtf8("latch_button"))
+        self.latch_button.clicked.connect(self.handleClicked)
+
+        self.verticalLayout.addWidget(self.latch_button)
         self.gridLayoutWidget = QtGui.QWidget(self.centralwidget)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 290, 141, 171))
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 210, 141, 171))
         self.gridLayoutWidget.setObjectName(_fromUtf8("gridLayoutWidget"))
         self.gridLayout = QtGui.QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
@@ -82,27 +81,27 @@ class Ui_MainWindow(object):
         self.stop.setObjectName(_fromUtf8("stop"))
         self.gridLayout.addWidget(self.stop, 0, 0, 1, 1)
         self.line_2 = QtGui.QFrame(self.centralwidget)
-        self.line_2.setGeometry(QtCore.QRect(0, 270, 161, 20))
+        self.line_2.setGeometry(QtCore.QRect(0, 190, 161, 20))
         self.line_2.setFrameShape(QtGui.QFrame.HLine)
         self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_2.setObjectName(_fromUtf8("line_2"))
         self.line_3 = QtGui.QFrame(self.centralwidget)
-        self.line_3.setGeometry(QtCore.QRect(0, 460, 161, 20))
+        self.line_3.setGeometry(QtCore.QRect(0, 380, 161, 20))
         self.line_3.setFrameShape(QtGui.QFrame.HLine)
         self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_3.setObjectName(_fromUtf8("line_3"))
         self.line_4 = QtGui.QFrame(self.centralwidget)
-        self.line_4.setGeometry(QtCore.QRect(0, -10, 161, 20))
+        self.line_4.setGeometry(QtCore.QRect(0, 60, 161, 20))
         self.line_4.setFrameShape(QtGui.QFrame.HLine)
         self.line_4.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_4.setObjectName(_fromUtf8("line_4"))
         self.line_5 = QtGui.QFrame(self.centralwidget)
-        self.line_5.setGeometry(QtCore.QRect(-3, 590, 161, 20))
+        self.line_5.setGeometry(QtCore.QRect(-3, 510, 161, 20))
         self.line_5.setFrameShape(QtGui.QFrame.HLine)
         self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_5.setObjectName(_fromUtf8("line_5"))
         self.horizontalLayoutWidget = QtGui.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 480, 141, 51))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 400, 141, 51))
         self.horizontalLayoutWidget.setObjectName(_fromUtf8("horizontalLayoutWidget"))
         self.horizontalLayout = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
@@ -115,7 +114,7 @@ class Ui_MainWindow(object):
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.horizontalLayout.addWidget(self.lineEdit)
         self.horizontalLayoutWidget_2 = QtGui.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(10, 540, 141, 51))
+        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(10, 460, 141, 51))
         self.horizontalLayoutWidget_2.setObjectName(_fromUtf8("horizontalLayoutWidget_2"))
         self.horizontalLayout_3 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
         self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
@@ -145,11 +144,19 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def handleClicked(self):
+        if self.latch_button.isDown():
+            #print "Press"
+            self.latch_button_state = True
+            print self.latch_button_state
+        else:
+            self.latch_button_state = False
+            #print 'release'
+
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "OpenCV", None))
-        self.start_button.setText(_translate("MainWindow", "Start", None))
-        self.stop_button.setText(_translate("MainWindow", "Stop", None))
-        self.quit_button.setText(_translate("MainWindow", "Quit", None))
+        self.latch_button.setText(_translate("MainWindow", "Latch", None))
+        self.latch_button.setShortcut(_translate("MainWindow", "Z", None))
         self.label.setText(_translate("MainWindow", "Fingers", None))
         self.label_2.setText(_translate("MainWindow", "Button", None))
 
