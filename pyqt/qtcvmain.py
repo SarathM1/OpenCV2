@@ -7,6 +7,7 @@ import numpy as np
 import dlib
 import imutils
 from math import sqrt
+import serial
 
 class Flags():
 	isSet_fwd = False
@@ -84,8 +85,8 @@ class Video():
 	def __init__(self,capture):
 		self.capture = capture
 		self.currentFrame=np.array([])
- 		self.dlib_obj = Dlib()
- 		self.font = cv2.FONT_HERSHEY_SIMPLEX
+		self.dlib_obj = Dlib()
+		self.font = cv2.FONT_HERSHEY_SIMPLEX
 	def captureNextFrame(self):
 		"""                           
 		capture frame and reverse RBG BGR and return opencv image                                      
@@ -306,6 +307,7 @@ class Gui(QtGui.QMainWindow):
 		self._timer.timeout.connect(self.play)
 		self._timer.start(20)
 		self.update()
+
  
 	def play(self):
 		#try:
@@ -318,31 +320,38 @@ class Gui(QtGui.QMainWindow):
 		#	print "play(): ",e
 	
 	def checkFlags(self): 
-		if flags.isSet_fwd:
-			self.ui.up_arrow.setEnabled(True)
-		else:
-			self.ui.up_arrow.setEnabled(False)
-		
-		if flags.isSet_back:
-			self.ui.down_arrow.setEnabled(True)
-		else:
-			self.ui.down_arrow.setEnabled(False)
-		
-		if flags.isSet_left:
-			self.ui.left_arrow.setEnabled(True)
-		else:
-			self.ui.left_arrow.setEnabled(False)
-		
-		if flags.isSet_right:
-			self.ui.right_arrow.setEnabled(True)
-		else:
-			self.ui.right_arrow.setEnabled(False)
+		#print self.ui.latch_button_state
+		if self.ui.latch_button_state:
+			if flags.isSet_fwd:
+				self.ui.up_arrow.setEnabled(True)
+				ser.write('f')
+			else:
+				self.ui.up_arrow.setEnabled(False)
+				
+			if flags.isSet_back:
+				self.ui.down_arrow.setEnabled(True)
+				ser.write('b')
+			else:
+				self.ui.down_arrow.setEnabled(False)
+			
+			if flags.isSet_left:
+				self.ui.left_arrow.setEnabled(True)
+				ser.write('l')
+			else:
+				self.ui.left_arrow.setEnabled(False)
+			
+			if flags.isSet_right:
+				self.ui.right_arrow.setEnabled(True)
+				ser.write('r')
+			else:
+				self.ui.right_arrow.setEnabled(False)
 
-		if flags.isSet_stop:
-			self.ui.stop.setStyleSheet('background-color :rgb(255, 0, 0) ;border-color: rgb(42, 42, 42);')
-		else:
-			self.ui.stop.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
-		
+			if flags.isSet_stop:
+				self.ui.stop.setStyleSheet('background-color :rgb(255, 0, 0) ;border-color: rgb(42, 42, 42);')
+				ser.write('s')
+			else:
+				self.ui.stop.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
+
 		if flags.prev_button == False and flags.cur_button == True:
 			flags.isSet_button = not flags.isSet_button
 
@@ -350,7 +359,10 @@ class Gui(QtGui.QMainWindow):
 		if flags.isSet_button:
 			self.ui.button.setStyleSheet('background-color :rgb(255, 0, 0) ;border-color: rgb(42, 42, 42);')
 		else:
+			ser.write('s')
 			self.ui.button.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
+
+	
 
 def main():
 	app = QtGui.QApplication(sys.argv)
@@ -360,4 +372,5 @@ def main():
  
 if __name__ == '__main__':
 	flags = Flags()
+	ser = serial.Serial('/dev/ttyUSB0')
 	main()
