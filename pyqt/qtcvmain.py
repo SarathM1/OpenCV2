@@ -406,6 +406,12 @@ class Gui(QtGui.QMainWindow):
 				pass
 			flags.set_stop()
 			flags.prev_cmd = 's'
+			self.ui.up_arrow.setEnabled(False)
+			self.ui.down_arrow.setEnabled(False)
+			self.ui.left_arrow.setEnabled(False)
+			self.ui.right_arrow.setEnabled(False)
+			self.ui.stop.setStyleSheet('background-color :rgb(190, 56, 56) ;border-color: rgb(42, 42, 42);')
+			self.ui.stop.setText("Off")
 			self.ui.mode.setStyleSheet('background-color :rgb(190, 56, 56) ;border-color: rgb(42, 42, 42);')
 			self.ui.mode.setText("Relay")
 
