@@ -390,7 +390,10 @@ class Gui(QtGui.QMainWindow):
 				self.ui.stop.setText("On")
 		else:
 			if flags.isSet_button:
-				ser.write(flags.prev_cmd)
+				try:
+					ser.write(flags.prev_cmd)
+				except NameError, e:
+					pass
 
 
 		if flags.prev_button == False and flags.cur_button == True:
