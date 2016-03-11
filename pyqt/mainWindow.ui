@@ -105,8 +105,7 @@
      <item row="1" column="0">
       <widget class="QPushButton" name="latch">
        <property name="styleSheet">
-        <string notr="true">background-color :rgb(190, 56, 56) ; ;
-</string>
+        <string notr="true">background-color :rgb(190, 56, 56) ; </string>
        </property>
        <property name="text">
         <string>Latch</string>
@@ -219,8 +218,7 @@
      <item>
       <widget class="QPushButton" name="mode">
        <property name="styleSheet">
-        <string notr="true">background-color :rgb(190, 56, 56) ; ;
-</string>
+        <string notr="true">background-color :rgb(190, 56, 56) ; </string>
        </property>
        <property name="text">
         <string>Relay</string>

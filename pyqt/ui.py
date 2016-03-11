@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Fri Mar 11 15:28:07 2016
+# Created: Fri Mar 11 15:42:31 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -69,8 +69,7 @@ class Ui_MainWindow(object):
         self.stop.setObjectName(_fromUtf8("stop"))
         self.gridLayout.addWidget(self.stop, 0, 0, 1, 1)
         self.latch = QtGui.QPushButton(self.gridLayoutWidget)
-        self.latch.setStyleSheet(_fromUtf8("background-color :rgb(190, 56, 56) ; ;\n"
-""))
+        self.latch.setStyleSheet(_fromUtf8("background-color :rgb(190, 56, 56) ; "))
         self.latch.setObjectName(_fromUtf8("latch"))
         self.gridLayout.addWidget(self.latch, 1, 0, 1, 1)
         self.line_2 = QtGui.QFrame(self.centralwidget)
@@ -115,8 +114,7 @@ class Ui_MainWindow(object):
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
         self.mode = QtGui.QPushButton(self.horizontalLayoutWidget_2)
-        self.mode.setStyleSheet(_fromUtf8("background-color :rgb(190, 56, 56) ; ;\n"
-""))
+        self.mode.setStyleSheet(_fromUtf8("background-color :rgb(190, 56, 56) ; "))
         self.mode.setObjectName(_fromUtf8("mode"))
         self.horizontalLayout_3.addWidget(self.mode)
         spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
