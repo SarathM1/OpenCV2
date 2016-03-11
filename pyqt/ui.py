@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Fri Mar 11 15:19:06 2016
+# Created: Fri Mar 11 15:28:07 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -24,14 +24,14 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_MainWindow(object):
-    latch_button_state = False
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(1076, 664)
+        MainWindow.resize(1071, 664)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.videoFrame = QtGui.QLabel(self.centralwidget)
-        self.videoFrame.setGeometry(QtCore.QRect(160, 10, 891, 601))
+        self.videoFrame.setGeometry(QtCore.QRect(160, 10, 891, 611))
+        self.videoFrame.setStyleSheet(_fromUtf8("background-color: rgb(85, 85, 85);"))
         self.videoFrame.setText(_fromUtf8(""))
         self.videoFrame.setObjectName(_fromUtf8("videoFrame"))
         self.gridLayoutWidget = QtGui.QWidget(self.centralwidget)
@@ -123,7 +123,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addItem(spacerItem1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1076, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1071, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)

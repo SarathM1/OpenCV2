@@ -19,6 +19,7 @@ class Flags():
 	prev_button = False
 	cur_button = False
 	isSet_button = False
+	isLatch_button = False
 	prev_cmd = 's'
 
 	def set_fwd(self):
@@ -326,16 +327,16 @@ class Gui(QtGui.QMainWindow):
 		self.key = QtCore.QString()
 		if Qt.Key_A <= event.key() <= Qt.Key_Z:
 			self.key = event.text()
-		self.ui.latch_button_state = True
+		flags.isLatch_button = True
 		self.key = event.text()
-		print "Key Pressed"
+		self.ui.latch.setStyleSheet('background-color :rgbrgb(0,131, 0);')
 	def keyReleaseEvent(self,event):
 		if event.isAutoRepeat():
 			return
-		self.ui.latch_button_state = False
-		print "Key Release"
+		flags.isLatch_button = False
+		self.ui.latch.setStyleSheet('background-color :rgb(190, 56, 56) ;')
 	def checkFlags(self): 
-		if self.ui.latch_button_state and flags.isSet_button:
+		if flags.isLatch_button and flags.isSet_button:
 			if flags.isSet_fwd:
 				self.ui.up_arrow.setEnabled(True)
 				try:
@@ -382,10 +383,10 @@ class Gui(QtGui.QMainWindow):
 				except NameError, e:		# To avoid error while debugging without Xbee
 					pass
 				flags.prev_cmd = 's'
-				self.ui.stop.setStyleSheet('background-color :rgb(190, 56, 56) ;border-color: rgb(42, 42, 42);')
+				self.ui.stop.setStyleSheet('background-color :rgb(190, 56, 56) ;')
 				self.ui.stop.setText("Off")
 			else:
-				self.ui.stop.setStyleSheet('background-color :rgb(0,131, 0) ;border-color: rgb(42, 42, 42);')
+				self.ui.stop.setStyleSheet('background-color :rgb(0,131, 0) ;')
 				self.ui.stop.setText("On")
 		else:
 			if flags.isSet_button:
@@ -397,7 +398,7 @@ class Gui(QtGui.QMainWindow):
 
 
 		if flags.isSet_button:
-			self.ui.mode.setStyleSheet('background-color :rgb(0,131, 0) ;border-color: rgb(42, 42, 42);')
+			self.ui.mode.setStyleSheet('background-color :rgb(0,131, 0) ;')
 			self.ui.mode.setText("Robot")
 		else:
 			try:
@@ -410,9 +411,9 @@ class Gui(QtGui.QMainWindow):
 			self.ui.down_arrow.setEnabled(False)
 			self.ui.left_arrow.setEnabled(False)
 			self.ui.right_arrow.setEnabled(False)
-			self.ui.stop.setStyleSheet('background-color :rgb(190, 56, 56) ;border-color: rgb(42, 42, 42);')
+			self.ui.stop.setStyleSheet('background-color :rgb(190, 56, 56) ;')
 			self.ui.stop.setText("Off")
-			self.ui.mode.setStyleSheet('background-color :rgb(190, 56, 56) ;border-color: rgb(42, 42, 42);')
+			self.ui.mode.setStyleSheet('background-color :rgb(190, 56, 56) ;')
 			self.ui.mode.setText("Relay")
 
 	
