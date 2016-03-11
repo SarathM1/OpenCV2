@@ -112,7 +112,9 @@ void loop() {
               delay(10);    
               Stop();
               break;
-      
+      default:
+              Stop();
+              break;
     }
   }
 }
