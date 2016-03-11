@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1451</width>
+    <width>1076</width>
     <height>664</height>
    </rect>
   </property>
@@ -17,10 +17,10 @@
    <widget class="QLabel" name="videoFrame">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>20</y>
-      <width>1271</width>
-      <height>611</height>
+      <x>160</x>
+      <y>10</y>
+      <width>891</width>
+      <height>601</height>
      </rect>
     </property>
     <property name="text">
@@ -253,7 +253,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1451</width>
+     <width>1076</width>
      <height>25</height>
     </rect>
    </property>
