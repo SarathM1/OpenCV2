@@ -1,7 +1,8 @@
 import sys
 import cv2
 import numpy as np
-from PyQt4 import QtGui, QtCore, Qt
+from PyQt4 import QtGui, QtCore
+from PyQt4.Qt import Qt
 from ui import Ui_MainWindow
 import numpy as np
 import dlib
@@ -18,6 +19,7 @@ class Flags():
 	prev_button = False
 	cur_button = False
 	isSet_button = False
+	prev_cmd = 's'
 
 	def set_fwd(self):
 		self.isSet_fwd = True
@@ -57,7 +59,7 @@ class Flags():
 
 class Dlib():
 	def __init__(self):
-		self.PREDICTOR_PATH = "/home/wa/Documents/OpenCV2/shape_predictor_68_face_landmarks.dat"
+		self.PREDICTOR_PATH = "../shape_predictor_68_face_landmarks.dat"
 		MOUTH_POINTS = list(range(48, 61))
 		self.OVERLAY_POINTS = [MOUTH_POINTS]
 
@@ -200,7 +202,6 @@ class Video():
 		else:
 			cv2.rectangle(img,(x1,y1),(x2,y2),(188,188,137),1)
 			flags.cur_button = False
-		cv2.putText(img,str(flags.cur_button),(0,50), font, 1,(255,0,0),1,16)
 		#cv2.imshow('Img',img)
 		return img
 	
@@ -318,39 +319,76 @@ class Gui(QtGui.QMainWindow):
 		self.checkFlags()
 		#except Exception,e:
 		#	print "play(): ",e
-	
+	def keyPressEvent(self, event):
+		if event.isAutoRepeat():
+			return
+		
+		self.key = QtCore.QString()
+		if Qt.Key_A <= event.key() <= Qt.Key_Z:
+			self.key = event.text()
+		self.ui.latch_button_state = True
+		self.key = event.text()
+		print "Key Pressed"
+	def keyReleaseEvent(self,event):
+		if event.isAutoRepeat():
+			return
+		self.ui.latch_button_state = False
+		print "Key Release"
 	def checkFlags(self): 
-		#print self.ui.latch_button_state
-		if self.ui.latch_button_state:
+		if self.ui.latch_button_state and flags.isSet_button:
 			if flags.isSet_fwd:
 				self.ui.up_arrow.setEnabled(True)
-				ser.write('f')
+				try:
+					ser.write('f')					# To avoid error while debugging without Xbee
+				except NameError, e:
+					pass
+				flags.prev_cmd = 'f'
 			else:
 				self.ui.up_arrow.setEnabled(False)
 				
 			if flags.isSet_back:
 				self.ui.down_arrow.setEnabled(True)
-				ser.write('b')
+				try:
+					ser.write('b')			# To avoid error while debugging without Xbee
+				except NameError, e:
+					pass
+				flags.prev_cmd = 'b'
 			else:
 				self.ui.down_arrow.setEnabled(False)
 			
 			if flags.isSet_left:
 				self.ui.left_arrow.setEnabled(True)
-				ser.write('l')
+				try:
+					ser.write('l')		# To avoid error while debugging without Xbee
+				except NameError, e:
+					pass
+				flags.prev_cmd = 'l'
 			else:
 				self.ui.left_arrow.setEnabled(False)
 			
 			if flags.isSet_right:
 				self.ui.right_arrow.setEnabled(True)
-				ser.write('r')
+				try:
+					ser.write('r')
+				except NameError, e:		# To avoid error while debugging without Xbee
+					pass
+				flags.prev_cmd = 'r'
 			else:
 				self.ui.right_arrow.setEnabled(False)
 
 			if flags.isSet_stop:
 				self.ui.stop.setStyleSheet('background-color :rgb(255, 0, 0) ;border-color: rgb(42, 42, 42);')
-				ser.write('s')
+				try:
+					ser.write('s')
+				except NameError, e:		# To avoid error while debugging without Xbee
+					pass
+				flags.prev_cmd = 's'
 			else:
 				self.ui.stop.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
+		else:
+			if flags.isSet_button:
+				ser.write(flags.prev_cmd)
+
 
 		if flags.prev_button == False and flags.cur_button == True:
 			flags.isSet_button = not flags.isSet_button
@@ -359,7 +397,12 @@ class Gui(QtGui.QMainWindow):
 		if flags.isSet_button:
 			self.ui.button.setStyleSheet('background-color :rgb(255, 0, 0) ;border-color: rgb(42, 42, 42);')
 		else:
-			ser.write('s')
+			try:
+				ser.write('s')
+			except NameError, e:			# To avoid error while debugging without Xbee
+				pass
+			flags.set_stop()
+			flags.prev_cmd = 's'
 			self.ui.button.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
 
 	
@@ -372,5 +415,9 @@ def main():
  
 if __name__ == '__main__':
 	flags = Flags()
-	ser = serial.Serial('/dev/ttyUSB0')
+
+	try:
+		ser = serial.Serial('/dev/ttyUSB0')
+	except Exception, e:
+		print e
 	main()
