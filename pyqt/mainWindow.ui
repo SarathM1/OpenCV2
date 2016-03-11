@@ -17,8 +17,8 @@
    <widget class="QLabel" name="videoFrame">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>2</y>
+      <x>150</x>
+      <y>20</y>
       <width>1271</width>
       <height>611</height>
      </rect>
@@ -27,36 +27,11 @@
      <string/>
     </property>
    </widget>
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>141</width>
-      <height>101</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="latch_button">
-       <property name="text">
-        <string>Latch</string>
-       </property>
-       <property name="shortcut">
-        <string>Z</string>
-       </property>
-       <property name="autoRepeat">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>210</y>
+      <y>140</y>
       <width>141</width>
       <height>171</height>
      </rect>
@@ -117,11 +92,21 @@
      <item row="0" column="0">
       <widget class="QPushButton" name="stop">
        <property name="styleSheet">
-        <string notr="true">background-color :rgb(197, 197, 197) ;
-border-color: rgb(42, 42, 42);</string>
+        <string notr="true">background-color :rgb(190, 56, 56) ;</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Off</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="latch">
+       <property name="styleSheet">
+        <string notr="true">background-color :rgb(190, 56, 56) ; ;
+</string>
+       </property>
+       <property name="text">
+        <string>Latch</string>
        </property>
       </widget>
      </item>
@@ -131,7 +116,7 @@ border-color: rgb(42, 42, 42);</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>190</y>
+      <y>120</y>
       <width>161</width>
       <height>20</height>
      </rect>
@@ -144,20 +129,7 @@ border-color: rgb(42, 42, 42);</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>380</y>
-      <width>161</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="Line" name="line_4">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>60</y>
+      <y>310</y>
       <width>161</width>
       <height>20</height>
      </rect>
@@ -170,7 +142,7 @@ border-color: rgb(42, 42, 42);</string>
     <property name="geometry">
      <rect>
       <x>-3</x>
-      <y>510</y>
+      <y>440</y>
       <width>161</width>
       <height>20</height>
      </rect>
@@ -183,7 +155,7 @@ border-color: rgb(42, 42, 42);</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>400</y>
+      <y>330</y>
       <width>141</width>
       <height>51</height>
      </rect>
@@ -212,7 +184,7 @@ border-color: rgb(42, 42, 42);</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>460</y>
+      <y>390</y>
       <width>141</width>
       <height>51</height>
      </rect>
@@ -224,7 +196,7 @@ border-color: rgb(42, 42, 42);</string>
         <bool>true</bool>
        </property>
        <property name="text">
-        <string>Button</string>
+        <string>Mode</string>
        </property>
       </widget>
      </item>
@@ -242,13 +214,13 @@ border-color: rgb(42, 42, 42);</string>
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="button">
+      <widget class="QPushButton" name="mode">
        <property name="styleSheet">
-        <string notr="true">background-color :rgb(197, 197, 197) ;
-border-color: rgb(42, 42, 42);</string>
+        <string notr="true">background-color :rgb(190, 56, 56) ; ;
+</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Relay</string>
        </property>
       </widget>
      </item>
@@ -267,6 +239,14 @@ border-color: rgb(42, 42, 42);</string>
      </item>
     </layout>
    </widget>
+   <zorder>videoFrame</zorder>
+   <zorder>gridLayoutWidget</zorder>
+   <zorder>line_2</zorder>
+   <zorder>line_3</zorder>
+   <zorder>line_5</zorder>
+   <zorder>horizontalLayoutWidget</zorder>
+   <zorder>horizontalLayoutWidget_2</zorder>
+   <zorder>mode</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -274,7 +254,7 @@ border-color: rgb(42, 42, 42);</string>
      <x>0</x>
      <y>0</y>
      <width>1451</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

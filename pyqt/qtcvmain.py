@@ -377,14 +377,16 @@ class Gui(QtGui.QMainWindow):
 				self.ui.right_arrow.setEnabled(False)
 
 			if flags.isSet_stop:
-				self.ui.stop.setStyleSheet('background-color :rgb(255, 0, 0) ;border-color: rgb(42, 42, 42);')
 				try:
 					ser.write('s')
 				except NameError, e:		# To avoid error while debugging without Xbee
 					pass
 				flags.prev_cmd = 's'
+				self.ui.stop.setStyleSheet('background-color :rgb(190, 56, 56) ;border-color: rgb(42, 42, 42);')
+				self.ui.stop.setText("Off")
 			else:
-				self.ui.stop.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
+				self.ui.stop.setStyleSheet('background-color :rgb(0,131, 0) ;border-color: rgb(42, 42, 42);')
+				self.ui.stop.setText("On")
 		else:
 			if flags.isSet_button:
 				ser.write(flags.prev_cmd)
@@ -395,7 +397,8 @@ class Gui(QtGui.QMainWindow):
 
 
 		if flags.isSet_button:
-			self.ui.button.setStyleSheet('background-color :rgb(255, 0, 0) ;border-color: rgb(42, 42, 42);')
+			self.ui.mode.setStyleSheet('background-color :rgb(0,131, 0) ;border-color: rgb(42, 42, 42);')
+			self.ui.mode.setText("Robot")
 		else:
 			try:
 				ser.write('s')
@@ -403,7 +406,8 @@ class Gui(QtGui.QMainWindow):
 				pass
 			flags.set_stop()
 			flags.prev_cmd = 's'
-			self.ui.button.setStyleSheet('background-color :rgb(197, 197, 197) ;border-color: rgb(42, 42, 42);')
+			self.ui.mode.setStyleSheet('background-color :rgb(190, 56, 56) ;border-color: rgb(42, 42, 42);')
+			self.ui.mode.setText("Relay")
 
 	
 
