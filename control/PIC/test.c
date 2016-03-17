@@ -115,23 +115,23 @@ void interrupt ISR()
         {
           case 'l':
                   turn_left();
-                  __delay_ms(500);    
+                  __delay_ms(10);    
                   Stop();
                   break;
           case 'r':
                   turn_right();
-                  __delay_ms(500);    
+                  __delay_ms(10);    
                   Stop();
                   break;
 
           case 'f':
                   fwd();
-                  __delay_ms(500);    
+                  __delay_ms(10);    
                   Stop();
                   break;
           case 'b':
                   back();
-                  __delay_ms(500);    
+                  __delay_ms(10);    
                   Stop();
                   break;
           default:
