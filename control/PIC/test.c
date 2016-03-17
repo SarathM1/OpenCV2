@@ -11,8 +11,8 @@
 #pragma config FOSC = HS        // Oscillator Selection bits (HS oscillator)
 #pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT disabled)
 #pragma config PWRTE = OFF      // Power-up Timer Enable bit (PWRT disabled)
-#pragma config BOREN = ON       // Brown-out Reset Enable bit (BOR enabled)
-#pragma config LVP = ON         // Low-Voltage (Single-Supply) In-Circuit Serial Programming Enable bit (RB3/PGM pin has PGM function; low-voltage programming enabled)
+#pragma config BOREN = OFF       // Brown-out Reset Enable bit (BOR enabled)
+#pragma config LVP = OFF         // Low-Voltage (Single-Supply) In-Circuit Serial Programming Enable bit (RB3/PGM pin has PGM function; low-voltage programming enabled)
 #pragma config CPD = OFF        // Data EEPROM Memory Code Protection bit (Data EEPROM code protection off)
 #pragma config WRT = OFF        // Flash Program Memory Write Enable bits (Write protection off; all program memory may be written to by EECON control)
 #pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
@@ -27,6 +27,7 @@ char ch;
 #define EN2 RB2
 
 #define _XTAL_FREQ 20000000
+
 void uart_init()
 {
     TXEN = 1; 
@@ -49,44 +50,56 @@ void start()
 
 void turn_left()
 {
-  start();
+  //start();
   C1A = 0;   
   C1B = 0;   
   C2A = 0;   
-  C2B = 0;  
+  C2B = 1;  
 }
 
 void turn_right()
 {
-  start();
+  ////start();
   C1A = 0;   
-  C1B = 0;   
-  C2A = 0;  
+  C1B = 0;
+  C2A = 1;  
   C2B = 0;   
 }
 
 void fwd()
 {
-  start();
+  //start();
   C1A = 0;   
   C1B = 1;  
   C2A = 0;   
-  C2B = 0;  
+  C2B = 1;  
 }
 
 void back()
 {
-  start();
+  //start();
   C1A = 1;  
   C1B = 0;   
-  C2A = 0;  
+  C2A = 1;  
   C2B = 0;   
 }
 
 void Stop()
 { 
-  EN1 = 0;   
-  EN2 = 0;   
+    
+  //EN1 = 0;   
+  //EN2 = 0;
+  C1A = 0;  
+  C1B = 0;   
+  C2A = 0;  
+  C2B = 0;
+}
+
+void uart_tx_char(char ch)
+{
+    TRMT = 0;
+    TXREG = ch;
+    while(!TRMT);
 }
 
 void interrupt ISR()
@@ -96,27 +109,29 @@ void interrupt ISR()
         RCIF = 0;
         
         ch = RCREG;
+        uart_tx_char(ch);
+        
         switch(ch)
         {
           case 'l':
                   turn_left();
-                  __delay_ms(10);    
+                  __delay_ms(500);    
                   Stop();
                   break;
           case 'r':
                   turn_right();
-                  __delay_ms(10);    
+                  __delay_ms(500);    
                   Stop();
                   break;
 
           case 'f':
                   fwd();
-                  __delay_ms(10);    
+                  __delay_ms(500);    
                   Stop();
                   break;
           case 'b':
                   back();
-                  __delay_ms(10);    
+                  __delay_ms(500);    
                   Stop();
                   break;
           default:
@@ -127,8 +142,10 @@ void interrupt ISR()
 }
 void main(void) {
     uart_init();
+    nRBPU = 1;
     TRISB = 0;
     PORTB = 0;
+    start();
     while(1);
     return;
 }
