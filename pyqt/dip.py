@@ -5,7 +5,6 @@ from PyQt4 import QtGui
 import imutils
 from math import sqrt
 
-
 class Dlib():
 	def __init__(self):
 		self.PREDICTOR_PATH = "../shape_predictor_68_face_landmarks.dat"
@@ -47,7 +46,6 @@ class openCV():
 		
 		if not ret :
 			print "Error reading Frame!!"
-			sys.exit(0)
 
 		readFrame = self.processFrame(readFrame)
 		self.currentFrame=cv2.cvtColor(readFrame,cv2.COLOR_BGR2RGB)
@@ -142,16 +140,16 @@ class openCV():
 		#cv2.drawContours(btn1,cnt,-1,(0,255,0),1)
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
-		self.flags.prev_button = self.flags.cur_button
+		self.flags.isSet_prev = self.flags.isSet_cur
 		if cnt is not None:
 			cv2.rectangle(img,(x1,y1),(x2,y2),(0,0,0),1)
 			hull = cv2.convexHull(cnt)
 			cv2.drawContours(btn1,[hull],0,(0,0,255),1)
 			#cv2.putText(img,"Btn1",(0,50), font, 1,(255,0,0),1,16)
-			self.flags.cur_button = True
+			self.flags.isSet_cur = True
 		else:
 			cv2.rectangle(img,(x1,y1),(x2,y2),(188,188,137),1)
-			self.flags.cur_button = False
+			self.flags.isSet_cur = False
 		#cv2.imshow('Img',img)
 		return img
 	
