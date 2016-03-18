@@ -1,16 +1,20 @@
 import serial
 
+CSS_RED = 'background-color :rgb(190, 56, 56) ;'
+CSS_GREEN = 'background-color :rgb(0,131, 0) ;'
+
 class Flags():
 	isSet_fwd = False
 	isSet_back = False
 	isSet_left = False
 	isSet_right = False
 	isSet_stop = False
-	prev_button = False
-	cur_button = False
+	isSet_prev = False
+	isSet_cur = False
 	isSet_button = False
 	isLatch_button = False
-	prev_cmd = 's'
+	cmd_latch = 's'
+	prev_comnd = 's'
 
 	def __init__(self,ui):
 		self.ui = ui
@@ -55,83 +59,84 @@ class Flags():
 		self.isSet_right = False
 
 	def checkFlags(self):
-		CSS_RED = 'background-color :rgb(190, 56, 56) ;'
-		CSS_GREEN = 'background-color :rgb(0,131, 0) ;'
 		
-		if self.isLatch_button and self.isSet_button:
-			if self.isSet_fwd:
-				self.ui.up_arrow.setEnabled(True)
-				self.send2xb('f')
-			else:
-				self.ui.up_arrow.setEnabled(False)
-
-			if self.isSet_back:
-				self.ui.down_arrow.setEnabled(True)
-				self.send2xb('b')			
-			else:
-				self.ui.down_arrow.setEnabled(False)
-			
-			if self.isSet_left:
-				self.ui.left_arrow.setEnabled(True)
-				self.send2xb('l')		
-				
-			else:
-				self.ui.left_arrow.setEnabled(False)
-			
-			if self.isSet_right:
-				self.ui.right_arrow.setEnabled(True)
-				self.send2xb('r')
-				
-			else:
-				self.ui.right_arrow.setEnabled(False)
-
-			if self.isSet_stop:
-				try:
-					self.ser.write('s')				# Exception if Xbee is not connected
-				except AttributeError, e:
-					pass
-				self.ui.stop.setStyleSheet(CSS_RED)
-				self.ui.stop.setText("Off")
-			else:
-				self.ui.stop.setStyleSheet(CSS_GREEN)
-				self.ui.stop.setText("On")
-		else:
-			if self.isSet_button:
-				try:
-					self.ser.write(self.prev_cmd)	# Exception if Xbee is not connected
-				except AttributeError, e:
-					pass
-
-		if self.prev_button == False and self.cur_button == True:
-			self.isSet_button = not self.isSet_button
-
-
 		if self.isSet_button:
 			self.ui.mode.setStyleSheet(CSS_GREEN)
 			self.ui.mode.setText("Robot")
-		else:
-			try:
-				self.ser.write('s')				# Exception if Xbee is not connected
-			except AttributeError, e:
-				pass
-			
-						
+
+			if self.isLatch_button:
+				if self.isSet_fwd:
+					self.ui.up_arrow.setEnabled(True)
+					cmd = 'f'
+				else:
+					self.ui.up_arrow.setEnabled(False)
+
+				if self.isSet_back:
+					self.ui.down_arrow.setEnabled(True)
+					cmd = 'b'			
+				else:
+					self.ui.down_arrow.setEnabled(False)
 				
-			self.set_stop()
+				if self.isSet_left:
+					self.ui.left_arrow.setEnabled(True)
+					cmd = 'l'		
+					
+				else:
+					self.ui.left_arrow.setEnabled(False)
+				
+				if self.isSet_right:
+					self.ui.right_arrow.setEnabled(True)
+					cmd = 'r'
+					
+				else:
+					self.ui.right_arrow.setEnabled(False)
+
+				if self.isSet_stop:
+					cmd = 's'				
+					self.ui.stop.setStyleSheet(CSS_RED)
+					self.ui.stop.setText("Off")
+				else:
+					self.ui.stop.setStyleSheet(CSS_GREEN)
+					self.ui.stop.setText("On")
+
+				self.cmd_latch = cmd
+			else:
+				cmd = self.cmd_latch	
+
+			self.cur_comnd = cmd
+
+			if self.prev_comnd != self.cur_comnd:
+				print cmd
+				self.prev_comnd = self.cur_comnd 
+		else:
+			cmd = 's'				
 			
-			self.ui.up_arrow.setEnabled(False)
-			self.ui.down_arrow.setEnabled(False)
-			self.ui.left_arrow.setEnabled(False)
-			self.ui.right_arrow.setEnabled(False)
-			self.ui.stop.setStyleSheet(CSS_RED)
-			self.ui.stop.setText("Off")
-			self.ui.mode.setStyleSheet(CSS_RED)
+			self.set_stop()
+			self.disable_arrows()
 			self.ui.mode.setText("Relay")
+			
+
+			
+
+		if self.isSet_prev == False and self.isSet_cur == True:
+			self.isSet_button = not self.isSet_button
+
+
 			
 	def send2xb(self,cmd):
 		try:
 			self.ser.write(cmd)					# To avoid error while debugging without Xbee
 		except AttributeError, e:
 			pass
-		self.prev_cmd = cmd
+		self.cmd_latch = cmd
+
+	def disable_arrows(self):
+		self.ui.up_arrow.setEnabled(False)
+		self.ui.down_arrow.setEnabled(False)
+		self.ui.left_arrow.setEnabled(False)
+		self.ui.right_arrow.setEnabled(False)
+		self.ui.stop.setStyleSheet(CSS_RED)
+		self.ui.stop.setText("Off")
+		self.ui.mode.setStyleSheet(CSS_RED)
+
 
