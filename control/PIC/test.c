@@ -50,25 +50,22 @@ void start()
 
 void turn_left()
 {
-  //start();
   C1A = 0;   
-  C1B = 0;   
-  C2A = 0;   
-  C2B = 1;  
+  C1B = 1;
+  C2A = 1;  
+  C2B = 0; 
 }
 
 void turn_right()
 {
-  ////start();
-  C1A = 0;   
-  C1B = 0;
-  C2A = 1;  
-  C2B = 0;   
+  C1A = 1;   
+  C1B = 0;   
+  C2A = 0;   
+  C2B = 1; 
 }
 
 void fwd()
 {
-  //start();
   C1A = 0;   
   C1B = 1;  
   C2A = 0;   
@@ -77,7 +74,6 @@ void fwd()
 
 void back()
 {
-  //start();
   C1A = 1;  
   C1B = 0;   
   C2A = 1;  
@@ -87,8 +83,6 @@ void back()
 void Stop()
 { 
     
-  //EN1 = 0;   
-  //EN2 = 0;
   C1A = 0;  
   C1B = 0;   
   C2A = 0;  
@@ -109,30 +103,22 @@ void interrupt ISR()
         RCIF = 0;
         
         ch = RCREG;
-        uart_tx_char(ch);
+        //uart_tx_char(ch);
         
         switch(ch)
         {
           case 'l':
                   turn_left();
-                  __delay_ms(10);    
-                  Stop();
                   break;
           case 'r':
                   turn_right();
-                  __delay_ms(10);    
-                  Stop();
                   break;
 
           case 'f':
                   fwd();
-                  __delay_ms(10);    
-                  Stop();
                   break;
           case 'b':
                   back();
-                  __delay_ms(10);    
-                  Stop();
                   break;
           default:
                   Stop();
