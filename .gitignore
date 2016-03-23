@@ -1,3 +1,4 @@
+*.swp
 *PIC.debug.*
 *PIC.production.*
 *.mk
