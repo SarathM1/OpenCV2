@@ -4,7 +4,7 @@ import cv2
 from PyQt4 import QtGui
 import imutils
 from math import sqrt
-
+import sys
 class Dlib():
 	def __init__(self):
 		self.PREDICTOR_PATH = "../shape_predictor_68_face_landmarks.dat"
@@ -46,6 +46,7 @@ class openCV():
 		
 		if not ret :
 			print "Error reading Frame!!"
+			sys.exit(0)
 
 		readFrame = self.processFrame(readFrame)
 		self.currentFrame=cv2.cvtColor(readFrame,cv2.COLOR_BGR2RGB)
