@@ -17,6 +17,8 @@ class Flags():
     cmd_latch = 's'
     prev_comnd = 's'
     fingers = 1
+    prev_fing = 0
+
     def __init__(self,ui):
         self.ui = ui
         try:
@@ -105,7 +107,10 @@ class Flags():
             self.set_stop()
             self.disable_arrows()
             self.ui.mode.setText("Relay")
-            self.ui.fingers.setText(str(self.fingers))
+            if self.fingers != self.prev_fing:
+                self.ui.fingers.setText(str(self.fingers))
+                self.playAudio(str(self.fingers))
+            self.prev_fing = self.fingers
 
         self.cur_comnd = cmd
 
@@ -128,8 +133,8 @@ class Flags():
         self.ui.stop.setText("Off")
         self.ui.mode.setStyleSheet(CSS_RED)
 
-        def playAudio(self,cmd):
-            p = vlc.MediaPlayer('./Sounds/'+cmd+'.mp3')
-            p.play()
+    def playAudio(self,cmd):
+        p = vlc.MediaPlayer('./Sounds/'+cmd+'.mp3')
+        p.play()
 
 
