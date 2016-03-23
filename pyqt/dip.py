@@ -101,7 +101,7 @@ class openCV():
 				
 			try:
 				mask,counter,hull,(cx,cy),list_far,list_end = self.count_fingers(hand_frame)
-				
+				self.flags.fingers = counter + 1                    # For Control
 				if(cv2.contourArea(hull)>3000) and list_far:
 					cv2.drawContours(hand_frame,[hull],0,(0,255,0),1)
 					[cv2.circle(hand_frame,far,5,[0,0,0],-1) for far in list_far]
