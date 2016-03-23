@@ -10,6 +10,12 @@
     <height>664</height>
    </rect>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>1071</width>
+    <height>664</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>OpenCV</string>
   </property>
@@ -174,7 +180,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QLineEdit" name="fingers">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -240,14 +246,6 @@
      </item>
     </layout>
    </widget>
-   <zorder>videoFrame</zorder>
-   <zorder>gridLayoutWidget</zorder>
-   <zorder>line_2</zorder>
-   <zorder>line_3</zorder>
-   <zorder>line_5</zorder>
-   <zorder>horizontalLayoutWidget</zorder>
-   <zorder>horizontalLayoutWidget_2</zorder>
-   <zorder>mode</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -255,7 +253,7 @@
      <x>0</x>
      <y>0</y>
      <width>1071</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainWindow.ui'
+# Form implementation generated from reading ui file 'ui_file.ui'
 #
-# Created: Fri Mar 11 15:42:31 2016
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -27,6 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1071, 664)
+        MainWindow.setMaximumSize(QtCore.QSize(1071, 664))
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.videoFrame = QtGui.QLabel(self.centralwidget)
@@ -38,7 +38,6 @@ class Ui_MainWindow(object):
         self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 140, 141, 171))
         self.gridLayoutWidget.setObjectName(_fromUtf8("gridLayoutWidget"))
         self.gridLayout = QtGui.QGridLayout(self.gridLayoutWidget)
-        self.gridLayout.setMargin(0)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.up_arrow = QtGui.QToolButton(self.gridLayoutWidget)
         self.up_arrow.setEnabled(False)
@@ -91,21 +90,19 @@ class Ui_MainWindow(object):
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 330, 141, 51))
         self.horizontalLayoutWidget.setObjectName(_fromUtf8("horizontalLayoutWidget"))
         self.horizontalLayout = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout.setMargin(0)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.label = QtGui.QLabel(self.horizontalLayoutWidget)
         self.label.setEnabled(True)
         self.label.setObjectName(_fromUtf8("label"))
         self.horizontalLayout.addWidget(self.label)
-        self.lineEdit = QtGui.QLineEdit(self.horizontalLayoutWidget)
-        self.lineEdit.setEnabled(True)
-        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
-        self.horizontalLayout.addWidget(self.lineEdit)
+        self.fingers = QtGui.QLineEdit(self.horizontalLayoutWidget)
+        self.fingers.setEnabled(True)
+        self.fingers.setObjectName(_fromUtf8("fingers"))
+        self.horizontalLayout.addWidget(self.fingers)
         self.horizontalLayoutWidget_2 = QtGui.QWidget(self.centralwidget)
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(10, 390, 141, 51))
         self.horizontalLayoutWidget_2.setObjectName(_fromUtf8("horizontalLayoutWidget_2"))
         self.horizontalLayout_3 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
-        self.horizontalLayout_3.setMargin(0)
         self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
         self.label_2 = QtGui.QLabel(self.horizontalLayoutWidget_2)
         self.label_2.setEnabled(True)
@@ -121,7 +118,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addItem(spacerItem1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1071, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1071, 27))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
