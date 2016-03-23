@@ -1,4 +1,5 @@
 import serial
+import vlc
 
 CSS_RED = 'background-color :rgb(190, 56, 56) ;'
 CSS_GREEN = 'background-color :rgb(0,131, 0) ;'
@@ -108,6 +109,7 @@ class Flags():
 
 		if self.prev_comnd != self.cur_comnd:
 			print cmd
+                        self.playAudio(cmd)
                         self.ser.write(cmd)
 			self.prev_comnd = self.cur_comnd
 
@@ -123,5 +125,9 @@ class Flags():
 		self.ui.stop.setStyleSheet(CSS_RED)
 		self.ui.stop.setText("Off")
 		self.ui.mode.setStyleSheet(CSS_RED)
+
+        def playAudio(self,cmd):
+            p = vlc.MediaPlayer(cmd+'.mp3')
+            p.play()
 
 
