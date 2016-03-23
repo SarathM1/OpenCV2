@@ -59,7 +59,6 @@ class Flags():
 		self.isSet_right = False
 
 	def checkFlags(self):
-		
 		if self.isSet_button:
 			self.ui.mode.setStyleSheet(CSS_GREEN)
 			self.ui.mode.setText("Robot")
@@ -73,26 +72,22 @@ class Flags():
 
 				if self.isSet_back:
 					self.ui.down_arrow.setEnabled(True)
-					cmd = 'b'			
+					cmd = 'b'
 				else:
 					self.ui.down_arrow.setEnabled(False)
-				
 				if self.isSet_left:
 					self.ui.left_arrow.setEnabled(True)
-					cmd = 'l'		
-					
+					cmd = 'l'
 				else:
 					self.ui.left_arrow.setEnabled(False)
-				
 				if self.isSet_right:
 					self.ui.right_arrow.setEnabled(True)
 					cmd = 'r'
-					
 				else:
 					self.ui.right_arrow.setEnabled(False)
 
 				if self.isSet_stop:
-					cmd = 's'				
+					cmd = 's'
 					self.ui.stop.setStyleSheet(CSS_RED)
 					self.ui.stop.setText("Off")
 				else:
@@ -101,34 +96,24 @@ class Flags():
 
 				self.cmd_latch = cmd
 			else:
-				cmd = self.cmd_latch	
+				cmd = self.cmd_latch
 
-			self.cur_comnd = cmd
-
-			if self.prev_comnd != self.cur_comnd:
-				print cmd
-				self.prev_comnd = self.cur_comnd 
 		else:
-			cmd = 's'				
-			
+			cmd = 's'
+                        self.cmd_latch = cmd
 			self.set_stop()
 			self.disable_arrows()
 			self.ui.mode.setText("Relay")
-			
+		self.cur_comnd = cmd
 
-			
+		if self.prev_comnd != self.cur_comnd:
+			print cmd
+                        self.ser.write(cmd)
+			self.prev_comnd = self.cur_comnd
 
 		if self.isSet_prev == False and self.isSet_cur == True:
 			self.isSet_button = not self.isSet_button
 
-
-			
-	def send2xb(self,cmd):
-		try:
-			self.ser.write(cmd)					# To avoid error while debugging without Xbee
-		except AttributeError, e:
-			pass
-		self.cmd_latch = cmd
 
 	def disable_arrows(self):
 		self.ui.up_arrow.setEnabled(False)
