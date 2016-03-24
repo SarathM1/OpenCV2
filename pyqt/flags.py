@@ -1,6 +1,5 @@
 import serial
 import vlc
-
 CSS_RED = 'background-color :rgb(190, 56, 56) ;'
 CSS_GREEN = 'background-color :rgb(0,131, 0) ;'
 
@@ -24,6 +23,7 @@ class Flags():
         try:
             self.ser = serial.Serial('/dev/ttyUSB0')
         except Exception, e:
+            QMessageBox.warning(self.ui.widget,"Xbee Error",str(e))
             print e
 
     def set_fwd(self):
@@ -117,7 +117,11 @@ class Flags():
         if self.prev_comnd != self.cur_comnd:
             #print cmd
             self.playAudio(cmd)
-            self.ser.write(cmd)
+            try:
+                self.ser.write(cmd)
+            except Exception as e:
+                pass
+
             self.prev_comnd = self.cur_comnd
 
         if self.isSet_prev == False and self.isSet_cur == True:
