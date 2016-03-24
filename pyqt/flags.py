@@ -1,5 +1,7 @@
 import serial
 import vlc
+from PyQt4.QtGui import QMessageBox
+
 CSS_RED = 'background-color :rgb(190, 56, 56) ;'
 CSS_GREEN = 'background-color :rgb(0,131, 0) ;'
 
