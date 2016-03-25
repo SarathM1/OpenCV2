@@ -1,9 +1,10 @@
+from PyQt4.QtGui import QMessageBox
 import serial
 import vlc
-from PyQt4.QtGui import QMessageBox
 
 CSS_RED = 'background-color :rgb(190, 56, 56) ;'
-CSS_GREEN = 'background-color :rgb(0,131, 0) ;'
+CSS_GREEN = 'background-color :rgb(0, 131, 0) ;'
+
 
 class Flags():
     isSet_fwd = False
@@ -20,12 +21,12 @@ class Flags():
     fingers = 1
     prev_fing = 0
 
-    def __init__(self,ui):
+    def __init__(self, ui):
         self.ui = ui
         try:
             self.ser = serial.Serial('/dev/ttyUSB0')
         except Exception, e:
-            QMessageBox.warning(self.ui.widget,"Xbee Error",str(e))
+            QMessageBox.warning(self.ui.widget, "Xbee Error", str(e))
             print e
 
     def set_fwd(self):
@@ -117,18 +118,17 @@ class Flags():
         self.cur_comnd = cmd
 
         if self.prev_comnd != self.cur_comnd:
-            #print cmd
+            # print cmd
             self.playAudio(cmd)
             try:
                 self.ser.write(cmd)
-            except Exception as e:
+            except:
                 pass
 
             self.prev_comnd = self.cur_comnd
 
-        if self.isSet_prev == False and self.isSet_cur == True:
+        if self.isSet_prev is False and self.isSet_cur is True:
             self.isSet_button = not self.isSet_button
-
 
     def disable_arrows(self):
         self.ui.up_arrow.setEnabled(False)
@@ -139,8 +139,6 @@ class Flags():
         self.ui.stop.setText("Off")
         self.ui.mode.setStyleSheet(CSS_RED)
 
-    def playAudio(self,cmd):
+    def playAudio(self, cmd):
         p = vlc.MediaPlayer('./Sounds/'+cmd+'.mp3')
         p.play()
-
-

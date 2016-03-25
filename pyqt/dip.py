@@ -1,9 +1,9 @@
-import numpy as np
-import dlib
-import cv2
 from PyQt4 import QtGui
-import imutils
 from math import sqrt
+import cv2
+import dlib
+import imutils
+import numpy as np
 import sys
 
 
