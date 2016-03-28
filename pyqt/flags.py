@@ -117,7 +117,7 @@ class Flags():
                 if self.fing_latch == 10 and self.fingers!=1:             # Reduce bouncing
                     self.ui.fingers.setText(str(self.fingers))
                     self.playAudio(str(self.fingers))
-                    print self.fing_latch,"\tFingers = ",self.fingers
+                    #print self.fing_latch,"\tFingers = ",self.fingers
 
                 self.fing_latch += 1
             else:
