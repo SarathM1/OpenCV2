@@ -87,7 +87,7 @@ class openCV():
 
         img = self.checkButton(img, x5, y5, x6, y6)
 
-
+        
         if self.flags.isSet_button:
             cv2.rectangle(img, (x3, y3), (x4, y4), (50, 50, 50), 1)
 
@@ -126,14 +126,9 @@ class openCV():
         btn1 = img[y1:y2, x1:x2]
         btn1 = cv2.cvtColor(btn1, cv2.COLOR_BGR2GRAY)
         ret, mask = cv2.threshold(btn1, 150, 255, cv2.THRESH_BINARY_INV)
-        (cnts, _) = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
+        (cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                                      cv2.CHAIN_APPROX_SIMPLE)
 
-        # res = cv2.bitwise_and(btn1, btn1, mask = mask)
-
-        (cnts, _) = cv2.findContours(mask.copy(),
-                                     cv2.RETR_EXTERNAL,
-                                     cv2.CHAIN_APPROX_SIMPLE)
         ci = 0
         max_area = 0
 
@@ -175,7 +170,7 @@ class openCV():
         output_img = img-img_copy
         output_img = cv2.cvtColor(output_img, cv2.COLOR_BGR2GRAY)
 
-        contours, hierarchy = cv2.findContours(output_img.copy(),
+        contours, hierarchy = cv2.findContours(output_img,
                                                cv2.cv.CV_RETR_EXTERNAL,
                                                cv2.cv.CV_CHAIN_APPROX_SIMPLE)
         cv2.drawContours(img, contours, -1, (0, 0, 255),  1, maxLevel=0)
@@ -206,7 +201,6 @@ class openCV():
         elif angle > 100:
             self.flags.set_right()
 
-        # cv2.putText(img, 'Angle = '+str(angle), (10, 300), self.font, 1,(0, 0, 255), 1, 16)
         return img
 
     def count_fingers(self, img):
@@ -217,7 +211,7 @@ class openCV():
         ret, mask = cv2.threshold(img, 0, 255,
                                   cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
-        (cnts, _) = cv2.findContours(mask.copy(),
+        (cnts, _) = cv2.findContours(mask,
                                      cv2.RETR_EXTERNAL,
                                      cv2.CHAIN_APPROX_SIMPLE)
 
