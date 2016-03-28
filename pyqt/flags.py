@@ -20,6 +20,7 @@ class Flags():
     prev_comnd = 's'
     fingers = 1
     prev_fing = 0
+    fing_latch = 0
 
     def __init__(self, ui):
         self.ui = ui
@@ -66,6 +67,8 @@ class Flags():
 
     def checkFlags(self):
         if self.isSet_button:
+            self.fing_latch = 0         # Resetting fing_latch
+            self.fingers = 1
             self.ui.mode.setStyleSheet(CSS_GREEN)
             self.ui.mode.setText("Robot")
 
@@ -110,9 +113,16 @@ class Flags():
             self.set_stop()
             self.disable_arrows()
             self.ui.mode.setText("Relay")
-            if self.fingers != self.prev_fing:
-                self.ui.fingers.setText(str(self.fingers))
-                self.playAudio(str(self.fingers))
+            if self.fingers == self.prev_fing:
+                if self.fing_latch == 10 and self.fingers!=1:             # Reduce bouncing
+                    self.ui.fingers.setText(str(self.fingers))
+                    self.playAudio(str(self.fingers))
+                    print self.fing_latch,"\tFingers = ",self.fingers
+
+                self.fing_latch += 1
+            else:
+                self.fing_latch = 0
+
             self.prev_fing = self.fingers
 
         self.cur_comnd = cmd
