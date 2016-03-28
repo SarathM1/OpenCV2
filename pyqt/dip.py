@@ -17,6 +17,7 @@ class Dlib():
         self.predictor = dlib.shape_predictor(self.PREDICTOR_PATH)
 
     def get_landmarks(self, img):
+    	img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         rects = self.detector(img,  0)
 
         if len(rects) > 1:
@@ -30,7 +31,7 @@ class Dlib():
     def get_face_mask(self, img, landmarks):
         for group in self.OVERLAY_POINTS:
             hull = cv2.convexHull(landmarks[group])
-            cv2.fillConvexPoly(img,  hull, 0)
+            return hull
 
 
 class openCV():
@@ -161,23 +162,11 @@ class openCV():
         return img
 
     def lipSegment(self, img):
-        img = imutils.resize(img, width=350, height=400)
-        img_copy = img.copy()
-
+    	self.t1 = cv2.getTickCount()
         landmarks = self.dlib_obj.get_landmarks(img)
-        self.dlib_obj.get_face_mask(img_copy,  landmarks)
-
-        output_img = img-img_copy
-        output_img = cv2.cvtColor(output_img, cv2.COLOR_BGR2GRAY)
-
-        contours, hierarchy = cv2.findContours(output_img,
-                                               cv2.cv.CV_RETR_EXTERNAL,
-                                               cv2.cv.CV_CHAIN_APPROX_SIMPLE)
-        cv2.drawContours(img, contours, -1, (0, 0, 255),  1, maxLevel=0)
-
-        cnt = contours[0]
-        (x, y), (MA, ma), angle = cv2.fitEllipse(cnt)
-
+        lipHull = self.dlib_obj.get_face_mask(img,  landmarks)
+        cv2.drawContours(img,lipHull,-1,(255, 0, 0), 2)
+        (x, y), (MA, ma), angle = cv2.fitEllipse(lipHull)
         a = ma/2
         b = MA/2
 
@@ -200,7 +189,8 @@ class openCV():
             self.flags.set_left()
         elif angle > 100:
             self.flags.set_right()
-
+        self.t2 = cv2.getTickCount()
+        print "Time = ", (self.t2-self.t1)/cv2.getTickFrequency()
         return img
 
     def count_fingers(self, img):
