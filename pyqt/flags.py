@@ -119,7 +119,6 @@ class Flags():
             self.ui.mode.setText("Relay")
             if self.fingers == self.prev_fing:
                 if self.fing_latch == 10 and self.fingers!=1:             # Reduce bouncing
-                    self.ui.fingers.setText(str(self.fingers))
                     self.playAudio(str(self.fingers))
                     #print self.fing_latch,"\tFingers = ",self.fingers
 
@@ -155,11 +154,15 @@ class Flags():
 
     def playAudio(self, cmd):
         if cmd.isalpha():
+            self.ui.fingers.setText(str(cmd))
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
             self.player.set_media(media)                                                                
             self.player.play()
         elif int(cmd) < 6:
+            self.ui.fingers.setText(str(cmd))
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
             self.player.set_media(media)                                                                                               
             self.player.play() 
-        
+        else:
+            self.ui.fingers.clear()
+ 
