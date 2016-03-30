@@ -88,7 +88,7 @@ class openCV():
 
         img = self.checkButton(img, x5, y5, x6, y6)
 
-        
+        self.flags.isSet_button = False
         if self.flags.isSet_button:
             cv2.rectangle(img, (x3, y3), (x4, y4), (50, 50, 50), 1)
 
@@ -204,7 +204,6 @@ class openCV():
         (_, cnts, _) = cv2.findContours(mask,
                                      cv2.RETR_EXTERNAL,
                                      cv2.CHAIN_APPROX_SIMPLE)
-
         list_far = []
         list_end = []
         if cnts:
@@ -230,17 +229,21 @@ class openCV():
             if defects is not None:
                 for i in range(defects.shape[0]):
                     s, e, f, d = defects[i, 0]
-                    # start = tuple(cnt[s][0])
+                    #start = tuple(cnt[s][0])
                     end = tuple(cnt[e][0])
                     far = tuple(cnt[f][0])
                     if d < 20000:
                         continue
-
                     if far[1] >= (cy+40):
                         continue
-                    else:
-                        pass
 
+                    diff1 = abs(end[0]-far[0])
+                    if diff1 > 100:
+                        continue
+
+                    cv2.line(img,end,far,( 0, 0, 0 ),2,8)
+                    cv2.imshow("hand",img)
+                    cv2.waitKey(1)
                     list_far.append(far)
                     list_end.append(end)
                     counter += 1
