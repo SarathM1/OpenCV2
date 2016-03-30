@@ -7,6 +7,10 @@ CSS_GREEN = 'background-color :rgb(0, 131, 0) ;'
 
 
 class Flags():
+
+    vlc_instance = vlc.Instance()                                                                                                  
+    player = vlc_instance.media_player_new()
+
     isSet_fwd = False
     isSet_back = False
     isSet_left = False
@@ -150,5 +154,12 @@ class Flags():
         self.ui.mode.setStyleSheet(CSS_RED)
 
     def playAudio(self, cmd):
-        p = vlc.MediaPlayer('./Sounds/'+cmd+'.mp3')
-        p.play()
+        if cmd.isalpha():
+            media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
+            self.player.set_media(media)                                                                
+            self.player.play()
+        elif int(cmd) < 6:
+            media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
+            self.player.set_media(media)                                                                                               
+            self.player.play() 
+        
