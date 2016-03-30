@@ -127,7 +127,7 @@ class openCV():
         btn1 = img[y1:y2, x1:x2]
         btn1 = cv2.cvtColor(btn1, cv2.COLOR_BGR2GRAY)
         ret, mask = cv2.threshold(btn1, 150, 255, cv2.THRESH_BINARY_INV)
-        (cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+        (_, cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                                      cv2.CHAIN_APPROX_SIMPLE)
 
         ci = 0
@@ -162,7 +162,7 @@ class openCV():
         return img
 
     def lipSegment(self, img):
-    	self.t1 = cv2.getTickCount()
+    	#self.t1 = cv2.getTickCount()
         landmarks = self.dlib_obj.get_landmarks(img)
         lipHull = self.dlib_obj.get_face_mask(img,  landmarks)
         cv2.drawContours(img,lipHull,-1,(255, 0, 0), 2)
@@ -189,8 +189,8 @@ class openCV():
             self.flags.set_left()
         elif angle > 100:
             self.flags.set_right()
-        self.t2 = cv2.getTickCount()
-        print "Time = ", (self.t2-self.t1)/cv2.getTickFrequency()
+        #self.t2 = cv2.getTickCount()
+        #print "Time = ", (self.t2-self.t1)/cv2.getTickFrequency()
         return img
 
     def count_fingers(self, img):
@@ -201,7 +201,7 @@ class openCV():
         ret, mask = cv2.threshold(img, 0, 255,
                                   cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
-        (cnts, _) = cv2.findContours(mask,
+        (_, cnts, _) = cv2.findContours(mask,
                                      cv2.RETR_EXTERNAL,
                                      cv2.CHAIN_APPROX_SIMPLE)
 
