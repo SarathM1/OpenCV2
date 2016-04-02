@@ -12,7 +12,12 @@ track_window = (c,r,w,h)
 
 # set up the ROI for tracking
 roi = frame[r:r+h, c:c+w]
+cv2.circle(frame, (c,r), 5, [0, 0, 0], -1)
+cv2.circle(frame, (c+w,r+h), 5, [0, 0, 0], -1)
+
 cv2.imshow("ROI",roi)
+cv2.imshow("frame",frame)
+
 hsv_roi =  cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
 mask = cv2.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
 roi_hist = cv2.calcHist([hsv_roi],[0],mask,[180],[0,180])
@@ -93,7 +98,22 @@ while(1):
         pts = cv2.boxPoints(ret)
         pts = np.int0(pts)
         img2 = cv2.polylines(frame,[pts],True, 255,2)
-        [cv2.circle(img2, tuple(p), 5, [0, 0, 0], -1) for p in pts]
+        #[cv2.circle(img2, tuple(p), 5, [0, 0, 0], -1) for p in pts]
+        x1,y1 = pts[1]
+        x2,y2 = pts[3]
+        
+        cv2.circle(img2,(x1,y1),5,[0,0,0],-1)
+        cv2.circle(img2,(x2,y2),5,[255,0,0],-1)
+        
+        try:
+          cv2.imshow("ROI2",img2[y1:y2,x1:x2])
+        except Exception, e:
+          print 1
+
+        try:
+          cv2.imshow("ROI2",img2[y2:y1,x2:x1])
+        except Exception, e:
+          print 2
         cv2.imshow('img2',img2)
         #print "\npts = ", pts
         for p in pts:
