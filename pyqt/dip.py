@@ -24,8 +24,8 @@ class Dlib():
         if len(rects) == 0:
             raise ValueError('Error: NoFaces!!')
 
-        return np.matrix([[p.x,  p.y] for p in self.predictor(img,
-                                                              rects[0]).parts()])
+        return np.matrix([[p.x,  p.y]
+                          for p in self.predictor(img, rects[0]).parts()])
 
     def get_face_mask(self, img, landmarks):
         for group in self.OVERLAY_POINTS:
@@ -229,14 +229,15 @@ class openCV():
             if defects is not None:
                 for i in range(defects.shape[0]):
                     s, e, f, d = defects[i, 0]
+                    d = d / 256
                     # start = tuple(cnt[s][0])
                     end = tuple(cnt[e][0])
                     far = tuple(cnt[f][0])
-                    if d > 20000:
-                        diff2 = (end[0]-far[0])
-                        diff1 = (end[1]-far[1])
+                    if d > 30:
+                        diff2 = (far[0] - end[0])
+                        diff1 = (far[1] - end[1])
 
-                        if diff2 > 100 or diff2 > 100 or far[1] >= (cy+40):
+                        if diff2 < -10 or diff2 < -25 or far[1] >= (cy+40):
                             cv2.putText(img,
                                         str(diff1) + ", " + str(diff2) +
                                         ", " + str(d), end,
@@ -245,9 +246,6 @@ class openCV():
                             cv2.line(img, end, far, (0, 0, 0), 1, 1)
                             cv2.circle(img, far, 4, (0, 0, 120), 1)
                             cv2.circle(img, end, 4, (120, 0, 0), 1)
-                            list_far.append(far)
-                            list_end.append(end)
-                            counter += 1
                             continue
                         else:
                             cv2.putText(img,
@@ -261,8 +259,7 @@ class openCV():
                             list_far.append(far)
                             list_end.append(end)
                             counter += 1
-                        
-                        cv2.imshow("hand", img)
-                        cv2.waitKey(1)
 
+        cv2.imshow("hand", img)
+        cv2.waitKey(1)
         return mask, counter, hull1, (cx, cy), list_far, list_end
