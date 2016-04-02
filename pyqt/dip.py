@@ -104,17 +104,24 @@ class openCV():
             hand_frame = img[y1:y2, x1:x2]
 
             try:
-                mask, counter, hull, (cx, cy), list_far, list_end = \
+                mask, counter, hull, (cx, cy), list_far,\
+                        list_end, diff1, diff2, depth = \
                         self.count_fingers(hand_frame)
+
                 self.flags.fingers = counter + 1                # For Control
                 if(cv2.contourArea(hull) > 3000) and list_far:
                     cv2.drawContours(hand_frame, [hull], 0, (0, 255, 0), 1)
-                    [cv2.circle(hand_frame,  far, 5,
-                                [0, 0, 0], -1) for far in list_far]
-                    [cv2.circle(hand_frame, end, 5,
-                                [150, 150, 150], -1) for end in list_end]
                     cv2.putText(hand_frame, "Fingers = "+str(counter+1),
                                 (10, 250), self.font,  1, (0, 0, 255), 1, 1)
+                    for i in range(len(list_far)):
+                        cv2.putText(img,
+                                    str(diff1[i]) + ", " + str(diff2[i]) +
+                                    ", " + str(depth[i]), list_end[i],
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
+                        cv2.line(hand_frame, list_end[i], list_far[i],
+                                 [255, 255, 255], 1, 8)
+                        cv2.circle(hand_frame, list_far[i], 4, [0, 0, 255], 2)
+                        cv2.circle(hand_frame, list_end[i], 4, [255, 0, 0], 2)
 
             except ZeroDivisionError, e:
                 print "Count_fingers ZeroDivisionError: ", e
@@ -206,6 +213,9 @@ class openCV():
                                         cv2.CHAIN_APPROX_SIMPLE)
         list_far = []
         list_end = []
+        list_diff1 = []
+        list_diff2 = []
+        list_depth = []
         if cnts:
             areas = [cv2.contourArea(c) for c in cnts]
             max_index = np.argmax(areas)
@@ -228,19 +238,19 @@ class openCV():
             counter = 0
             if defects is not None:
                 for i in range(defects.shape[0]):
-                    s, e, f, d = defects[i, 0]
-                    d = d / 256
+                    s, e, f, depth = defects[i, 0]
+                    depth = depth / 256
                     # start = tuple(cnt[s][0])
                     end = tuple(cnt[e][0])
                     far = tuple(cnt[f][0])
-                    if d > 30:
+                    if depth > 30:
                         diff2 = (far[0] - end[0])
                         diff1 = (far[1] - end[1])
 
                         if diff2 < -10 or diff2 < -25 or far[1] >= (cy+40):
                             cv2.putText(img,
                                         str(diff1) + ", " + str(diff2) +
-                                        ", " + str(d), end,
+                                        ", " + str(depth), end,
                                         cv2.FONT_HERSHEY_SIMPLEX,
                                         0.5, (0, 0, 0))
                             cv2.line(img, end, far, (0, 0, 0), 1, 1)
@@ -250,7 +260,7 @@ class openCV():
                         else:
                             cv2.putText(img,
                                         str(diff1) + ", " + str(diff2) +
-                                        ", " + str(d), end,
+                                        ", " + str(depth), end,
                                         cv2.FONT_HERSHEY_SIMPLEX,
                                         0.5, (255, 255, 255))
                             cv2.line(img, end, far, (255, 255, 255), 2, 8)
@@ -258,8 +268,12 @@ class openCV():
                             cv2.circle(img, end, 4, (255, 0, 0), 1)
                             list_far.append(far)
                             list_end.append(end)
+                            list_diff1.append(diff1)
+                            list_diff2.append(diff2)
+                            list_depth.append(depth)
                             counter += 1
 
         cv2.imshow("hand", img)
         cv2.waitKey(1)
-        return mask, counter, hull1, (cx, cy), list_far, list_end
+        return mask, counter, hull1, (cx, cy), \
+            list_far, list_end, list_diff1, list_diff2, list_depth
