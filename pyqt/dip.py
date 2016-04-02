@@ -2,7 +2,6 @@ from PyQt4 import QtGui
 from math import sqrt
 import cv2
 import dlib
-import imutils
 import numpy as np
 import sys
 
@@ -17,7 +16,7 @@ class Dlib():
         self.predictor = dlib.shape_predictor(self.PREDICTOR_PATH)
 
     def get_landmarks(self, img):
-    	img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         rects = self.detector(img,  0)
 
         if len(rects) > 1:
@@ -105,7 +104,8 @@ class openCV():
             hand_frame = img[y1:y2, x1:x2]
 
             try:
-                mask, counter, hull, (cx, cy), list_far, list_end = self.count_fingers(hand_frame)
+                mask, counter, hull, (cx, cy), list_far, list_end = \
+                        self.count_fingers(hand_frame)
                 self.flags.fingers = counter + 1                # For Control
                 if(cv2.contourArea(hull) > 3000) and list_far:
                     cv2.drawContours(hand_frame, [hull], 0, (0, 255, 0), 1)
@@ -128,7 +128,7 @@ class openCV():
         btn1 = cv2.cvtColor(btn1, cv2.COLOR_BGR2GRAY)
         ret, mask = cv2.threshold(btn1, 150, 255, cv2.THRESH_BINARY_INV)
         (_, cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL,
-                                     cv2.CHAIN_APPROX_SIMPLE)
+                                        cv2.CHAIN_APPROX_SIMPLE)
 
         ci = 0
         max_area = 0
@@ -162,10 +162,10 @@ class openCV():
         return img
 
     def lipSegment(self, img):
-    	#self.t1 = cv2.getTickCount()
+        # self.t1 = cv2.getTickCount()
         landmarks = self.dlib_obj.get_landmarks(img)
         lipHull = self.dlib_obj.get_face_mask(img,  landmarks)
-        cv2.drawContours(img,lipHull,-1,(255, 0, 0), 2)
+        cv2.drawContours(img, lipHull, -1, (255, 0, 0), 2)
         (x, y), (MA, ma), angle = cv2.fitEllipse(lipHull)
         a = ma/2
         b = MA/2
@@ -189,8 +189,8 @@ class openCV():
             self.flags.set_left()
         elif angle > 100:
             self.flags.set_right()
-        #self.t2 = cv2.getTickCount()
-        #print "Time = ", (self.t2-self.t1)/cv2.getTickFrequency()
+        # self.t2 = cv2.getTickCount()
+        # print "Time = ", (self.t2-self.t1)/cv2.getTickFrequency()
         return img
 
     def count_fingers(self, img):
@@ -202,8 +202,8 @@ class openCV():
                                   cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
         (_, cnts, _) = cv2.findContours(mask,
-                                     cv2.RETR_EXTERNAL,
-                                     cv2.CHAIN_APPROX_SIMPLE)
+                                        cv2.RETR_EXTERNAL,
+                                        cv2.CHAIN_APPROX_SIMPLE)
         list_far = []
         list_end = []
         if cnts:
@@ -229,23 +229,40 @@ class openCV():
             if defects is not None:
                 for i in range(defects.shape[0]):
                     s, e, f, d = defects[i, 0]
-                    #start = tuple(cnt[s][0])
+                    # start = tuple(cnt[s][0])
                     end = tuple(cnt[e][0])
                     far = tuple(cnt[f][0])
-                    if d < 20000:
-                        continue
-                    if far[1] >= (cy+40):
-                        continue
+                    if d > 20000:
+                        diff2 = (end[0]-far[0])
+                        diff1 = (end[1]-far[1])
 
-                    diff1 = abs(end[0]-far[0])
-                    if diff1 > 100:
-                        continue
-
-                    cv2.line(img,end,far,( 0, 0, 0 ),2,8)
-                    cv2.imshow("hand",img)
-                    cv2.waitKey(1)
-                    list_far.append(far)
-                    list_end.append(end)
-                    counter += 1
+                        if diff2 > 100 or diff2 > 100 or far[1] >= (cy+40):
+                            cv2.putText(img,
+                                        str(diff1) + ", " + str(diff2) +
+                                        ", " + str(d), end,
+                                        cv2.FONT_HERSHEY_SIMPLEX,
+                                        0.5, (0, 0, 0))
+                            cv2.line(img, end, far, (0, 0, 0), 1, 1)
+                            cv2.circle(img, far, 4, (0, 0, 120), 1)
+                            cv2.circle(img, end, 4, (120, 0, 0), 1)
+                            list_far.append(far)
+                            list_end.append(end)
+                            counter += 1
+                            continue
+                        else:
+                            cv2.putText(img,
+                                        str(diff1) + ", " + str(diff2) +
+                                        ", " + str(d), end,
+                                        cv2.FONT_HERSHEY_SIMPLEX,
+                                        0.5, (255, 255, 255))
+                            cv2.line(img, end, far, (255, 255, 255), 2, 8)
+                            cv2.circle(img, far, 4, (0, 0, 255), 1)
+                            cv2.circle(img, end, 4, (255, 0, 0), 1)
+                            list_far.append(far)
+                            list_end.append(end)
+                            counter += 1
+                        
+                        cv2.imshow("hand", img)
+                        cv2.waitKey(1)
 
         return mask, counter, hull1, (cx, cy), list_far, list_end
