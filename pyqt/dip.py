@@ -240,7 +240,7 @@ class openCV():
                     if depth > 30:
                         diff2 = (far[0] - end[0])
                         diff1 = (far[1] - end[1])
-                        if diff1 > 30 and diff1 < 180 and diff2 > -36 :
+                        if diff1 > 30 and diff1 < 180 and diff2 > -90 :
                             cv2.putText(img,
                                         str(diff1) + ", " + str(diff2) +
                                         ", " + str(depth), end,
