@@ -2,7 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui_file.ui'
 #
-# Created by: PyQt4 UI code generator 4.10.4
+# Created: Mon Apr 11 23:45:58 2016
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -38,6 +39,7 @@ class Ui_MainWindow(object):
         self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 140, 101, 171))
         self.gridLayoutWidget.setObjectName(_fromUtf8("gridLayoutWidget"))
         self.gridLayout = QtGui.QGridLayout(self.gridLayoutWidget)
+        self.gridLayout.setMargin(0)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.latch = QtGui.QPushButton(self.gridLayoutWidget)
         self.latch.setStyleSheet(_fromUtf8("background-color :rgb(190, 56, 56) ; "))
@@ -87,6 +89,7 @@ class Ui_MainWindow(object):
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 330, 101, 51))
         self.horizontalLayoutWidget.setObjectName(_fromUtf8("horizontalLayoutWidget"))
         self.horizontalLayout = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout.setMargin(0)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.label = QtGui.QLabel(self.horizontalLayoutWidget)
         self.label.setEnabled(True)
@@ -100,6 +103,7 @@ class Ui_MainWindow(object):
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(10, 390, 101, 51))
         self.horizontalLayoutWidget_2.setObjectName(_fromUtf8("horizontalLayoutWidget_2"))
         self.horizontalLayout_3 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
+        self.horizontalLayout_3.setMargin(0)
         self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
         self.label_2 = QtGui.QLabel(self.horizontalLayoutWidget_2)
         self.label_2.setEnabled(True)
@@ -116,6 +120,25 @@ class Ui_MainWindow(object):
         self.widget = QtGui.QWidget(self.centralwidget)
         self.widget.setGeometry(QtCore.QRect(260, 270, 120, 80))
         self.widget.setObjectName(_fromUtf8("widget"))
+        self.gridLayoutWidget_2 = QtGui.QWidget(self.centralwidget)
+        self.gridLayoutWidget_2.setGeometry(QtCore.QRect(10, 470, 101, 80))
+        self.gridLayoutWidget_2.setObjectName(_fromUtf8("gridLayoutWidget_2"))
+        self.gridLayout_2 = QtGui.QGridLayout(self.gridLayoutWidget_2)
+        self.gridLayout_2.setMargin(0)
+        self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
+        self.thresh_val = QtGui.QLineEdit(self.gridLayoutWidget_2)
+        self.thresh_val.setObjectName(_fromUtf8("thresh_val"))
+        self.gridLayout_2.addWidget(self.thresh_val, 1, 1, 1, 1)
+        self.label_3 = QtGui.QLabel(self.gridLayoutWidget_2)
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.gridLayout_2.addWidget(self.label_3, 1, 0, 1, 1)
+        self.thresh_trigger = QtGui.QCheckBox(self.gridLayoutWidget_2)
+        self.thresh_trigger.setText(_fromUtf8(""))
+        self.thresh_trigger.setObjectName(_fromUtf8("thresh_trigger"))
+        self.gridLayout_2.addWidget(self.thresh_trigger, 0, 1, 1, 1)
+        self.label_4 = QtGui.QLabel(self.gridLayoutWidget_2)
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+        self.gridLayout_2.addWidget(self.label_4, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1071, 27))
@@ -133,4 +156,6 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Cmd", None))
         self.label_2.setText(_translate("MainWindow", "Mode", None))
         self.mode.setText(_translate("MainWindow", "Relay", None))
+        self.label_3.setText(_translate("MainWindow", "THRESH", None))
+        self.label_4.setText(_translate("MainWindow", "UPDATE", None))
 
