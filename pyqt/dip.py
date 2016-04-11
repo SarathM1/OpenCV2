@@ -87,8 +87,8 @@ class openCV():
 
         img = self.checkButton(img, x5, y5, x6, y6)
 
-        self.flags.isSet_button = False
         if self.flags.isSet_button:
+            cv2.destroyAllWindows()
             cv2.rectangle(img, (x3, y3), (x4, y4), (50, 50, 50), 1)
 
             head_frame = img[y3:y4, x3:x4]
