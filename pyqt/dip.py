@@ -44,7 +44,7 @@ class openCV():
         capture frame and reverse RBG BGR and return opencv image
         """
         ret,  readFrame = self.capture.read()
-
+        readFrame = cv2.flip(readFrame, 1)
         if not ret:
             print "Error reading Frame!!"
             sys.exit(0)
@@ -68,18 +68,18 @@ class openCV():
             return None
 
     def processFrame(self, img):
-        x1 = 0        # hand_box = [(x1, y1), (x2, y2)]
+        x1 = 300        # hand_box = [(x1, y1), (x2, y2)]
         y1 = 0
-        x2 = 300
-        y2 = 400
+        x2 = 700
+        y2 = 300
 
-        x3 = 250      # head_box = [(x3, y3), (x4, y4)]
+        x3 = 0      # head_box = [(x3, y3), (x4, y4)]
         y3 = 100
-        x4 = 600
+        x4 = 350
         y4 = 500
 
-        x5 = 550    # Button
-        x6 = 650
+        x5 = 0    # Button
+        x6 = 100
         y5 = 0
         y6 = 50
 
@@ -111,10 +111,12 @@ class openCV():
                     cv2.drawContours(hand_frame, [hull], 0, (0, 255, 0), 1)
                     cv2.putText(hand_frame, "Fingers = "+str(counter+1),
                                 (10, 250), self.font,  1, (0, 0, 255), 1, 1)
+                    
                     for i in range(len(list_far)):
+                        x1,y1 = list_end[i]
                         cv2.putText(img,
                                     str(diff1[i]) + ", " + str(diff2[i]) +
-                                    ", " + str(depth[i]), list_end[i],
+                                    ", " + str(depth[i]), (x1 + 300, y1 - 10),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
                         cv2.line(hand_frame, list_end[i], list_far[i],
                                  [255, 255, 255], 1, 8)
