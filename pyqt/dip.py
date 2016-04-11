@@ -151,21 +151,16 @@ class openCV():
 
         else:
             cnt = None
-        # cv2.drawContours(btn1, cnt, -1, (0,255,0),1)
-        # font = cv2.FONT_HERSHEY_SIMPLEX
-
+        
         self.flags.isSet_prev = self.flags.isSet_cur
         if cnt is not None:
             cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 0), 1)
             hull = cv2.convexHull(cnt)
             cv2.drawContours(btn1, [hull], 0, (0, 0, 255), 1)
-            # cv2.putText(img, "Btn1", (0, 50),  font,  1, (255, 0, 0), 1, 16)
-
             self.flags.isSet_cur = True
         else:
             cv2.rectangle(img, (x1, y1), (x2, y2), (188, 188, 137), 1)
             self.flags.isSet_cur = False
-        # cv2.imshow('Img', img)
         return img
 
     def lipSegment(self, img):

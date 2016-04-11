@@ -17,7 +17,7 @@ class Flags():
     isSet_button = False
     isLatch_button = False
     cmd_latch = 's'
-    prev_comnd = 's'
+    prev_cmd = 's'
     fingers = 1
     prev_fing = 0
     fing_latch = 0
@@ -83,14 +83,14 @@ class Flags():
 
             self.prev_fing = self.fingers
 
-        if self.prev_comnd != self.cmd:
+        if self.prev_cmd != self.cmd:
             self.playAudio(self.cmd)
             try:
                 self.ser.write(self.cmd)
             except:
                 pass
 
-            self.prev_comnd = self.cmd
+            self.prev_cmd = self.cmd
 
         if self.isSet_prev is False and self.isSet_cur is True:
             self.isSet_button = not self.isSet_button
