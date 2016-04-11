@@ -247,7 +247,7 @@ class openCV():
                         diff2 = (far[0] - end[0])
                         diff1 = (far[1] - end[1])
 
-                        if diff2 < -10 or diff2 < -25 or far[1] >= (cy+40):
+                        if diff1 < -10 or diff2 < -25:  # or far[1] >= (cy+40):
                             cv2.putText(img,
                                         str(diff1) + ", " + str(diff2) +
                                         ", " + str(depth), end,
