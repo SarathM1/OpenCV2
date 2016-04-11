@@ -106,7 +106,6 @@ class Flags():
         self.ui.right_arrow.setEnabled(False)
         
     def playAudio(self, cmd):
-        self.ui.cmd.clear()
         if cmd.isalpha():
             self.ui.cmd.setText(str(cmd))
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
