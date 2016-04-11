@@ -9,8 +9,7 @@ import sys
 class Dlib():
     def __init__(self):
         self.PREDICTOR_PATH = "../shape_predictor_68_face_landmarks.dat"
-        MOUTH_POINTS = list(range(48,  61))
-        self.OVERLAY_POINTS = [MOUTH_POINTS]
+        self.MOUTH_POINTS = [list(range(48,  61))]
 
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor(self.PREDICTOR_PATH)
@@ -24,13 +23,12 @@ class Dlib():
         if len(rects) == 0:
             raise ValueError('Error: NoFaces!!')
 
-        return np.matrix([[p.x,  p.y]
+        landmarks = np.matrix([[p.x,  p.y]
                           for p in self.predictor(img, rects[0]).parts()])
 
-    def get_face_mask(self, img, landmarks):
-        for group in self.OVERLAY_POINTS:
+        for group in self.MOUTH_POINTS:
             hull = cv2.convexHull(landmarks[group])
-            return hull
+        return hull
 
 
 class openCV():
@@ -165,8 +163,7 @@ class openCV():
 
     def lipSegment(self, img):
         # self.t1 = cv2.getTickCount()
-        landmarks = self.dlib_obj.get_landmarks(img)
-        lipHull = self.dlib_obj.get_face_mask(img,  landmarks)
+        lipHull = self.dlib_obj.get_landmarks(img)
         cv2.drawContours(img, lipHull, -1, (255, 0, 0), 2)
         (x, y), (MA, ma), angle = cv2.fitEllipse(lipHull)
         a = ma/2
