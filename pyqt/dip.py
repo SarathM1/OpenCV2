@@ -236,35 +236,36 @@ class openCV():
                     # start = tuple(cnt[s][0])
                     end = tuple(cnt[e][0])
                     far = tuple(cnt[f][0])
+
                     if depth > 30:
                         diff2 = (far[0] - end[0])
                         diff1 = (far[1] - end[1])
-
-                        if diff1 < -10 or diff2 < -25:  # or far[1] >= (cy+40):
-                            cv2.putText(img,
-                                        str(diff1) + ", " + str(diff2) +
-                                        ", " + str(depth), end,
-                                        cv2.FONT_HERSHEY_SIMPLEX,
-                                        0.5, (0, 0, 0))
-                            cv2.line(img, end, far, (0, 0, 0), 1, 1)
-                            cv2.circle(img, far, 4, (0, 0, 120), 1)
-                            cv2.circle(img, end, 4, (120, 0, 0), 1)
-                            continue
-                        else:
+                        if diff1 > 30 and diff1 < 180 and diff2 > -36 :
                             cv2.putText(img,
                                         str(diff1) + ", " + str(diff2) +
                                         ", " + str(depth), end,
                                         cv2.FONT_HERSHEY_SIMPLEX,
                                         0.5, (255, 255, 255))
                             cv2.line(img, end, far, (255, 255, 255), 2, 8)
-                            cv2.circle(img, far, 4, (0, 0, 255), 1)
-                            cv2.circle(img, end, 4, (255, 0, 0), 1)
+                            cv2.circle(img, far, 4, (0, 0, 0), 1)
+                            cv2.circle(img, end, 4, (255, 255, 255), 1)
                             list_far.append(far)
                             list_end.append(end)
                             list_diff1.append(diff1)
                             list_diff2.append(diff2)
                             list_depth.append(depth)
                             counter += 1
+
+                        else:
+                            cv2.putText(img,
+                                        str(diff1) + ", " + str(diff2) +
+                                        ", " + str(depth), end,
+                                        cv2.FONT_HERSHEY_SIMPLEX,
+                                        0.5, (0, 0, 0))
+                            cv2.line(img, end, far, (0, 0, 0), 1, 1)
+                            cv2.circle(img, far, 4, (0, 0, 0), 1)
+                            cv2.circle(img, end, 4, (255, 255, 255), 1)
+                            continue
 
         cv2.imshow("hand", img)
         cv2.waitKey(1)
