@@ -176,18 +176,17 @@ class openCV():
                     self.font, 1, (255, 0, 0), 1)
 
         if(eccentricity < 0.9):
-            cv2.putText(img, 'Cmd = O', (10, 300),  self.font,  1,
-                        (0, 0, 255), 1, 16)
             self.flags.cmd = 'b' 
         else:
-            cv2.putText(img, 'Cmd = E', (10, 300),  self.font,  1,
-                        (0, 0, 255), 1, 16)
             self.flags.cmd = 'f' 
 
         if angle < 80:
             self.flags.cmd = 'l' 
         elif angle > 100:
             self.flags.cmd = 'r' 
+        
+        cv2.putText(img, 'Cmd = ' + self.flags.cmd, (10, 300),  self.font,  1,
+                        (0, 0, 255), 1, 16)
         # self.t2 = cv2.getTickCount()
         # print "Time = ", (self.t2-self.t1)/cv2.getTickFrequency()
         return img
