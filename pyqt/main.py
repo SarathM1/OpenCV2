@@ -13,11 +13,16 @@ class Gui(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.flags = Flags(self.ui)
-        self.video = openCV(cv2.VideoCapture(0), self.flags)
+        self.video = openCV(cv2.VideoCapture(0), self.flags,
+                            self.ui.thresh_val)
         self._timer = QtCore.QTimer(self)
         self._timer.timeout.connect(self.play)
         self._timer.start(20)
         self.update()
+        self.ui.thresh_trigger.stateChanged.connect(self.thresh_trigger)
+
+    def thresh_trigger(self):
+        self.video.thresh_change_trigger = not self.video.thresh_change_trigger
 
     def play(self):
         # try:

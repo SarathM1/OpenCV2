@@ -32,12 +32,15 @@ class Dlib():
 
 
 class openCV():
-    def __init__(self, capture, flags):
+    def __init__(self, capture, flags, thresh_val):
         self.flags = flags
+        self.thresh_val = thresh_val
         self.capture = capture
         self.currentFrame = np.array([])
         self.dlib_obj = Dlib()
         self.font = cv2.FONT_HERSHEY_SIMPLEX
+        self.thresh_change_trigger = False
+        self.THRESH = 0
 
     def captureNextFrame(self):
         """
@@ -133,7 +136,16 @@ class openCV():
     def checkButton(self, img, x1, y1, x2, y2):
         btn1 = img[y1:y2, x1:x2]
         btn1 = cv2.cvtColor(btn1, cv2.COLOR_BGR2GRAY)
-        ret, mask = cv2.threshold(btn1, 150, 255, cv2.THRESH_BINARY_INV)
+
+        if self.thresh_change_trigger:
+            ret, mask = cv2.threshold(btn1, 0, 255, cv2.THRESH_BINARY_INV +
+                                      cv2.THRESH_OTSU)
+            self.thresh_val.setText(str(ret))
+            self.THRESH = ret
+        else:
+            ret, mask = cv2.threshold(btn1, self.THRESH, 255,
+                                      cv2.THRESH_BINARY_INV)
+
         (_, cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                                         cv2.CHAIN_APPROX_SIMPLE)
 
