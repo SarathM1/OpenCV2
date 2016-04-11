@@ -204,14 +204,10 @@ class openCV():
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # Otsu's thresholding after Gaussian filtering
-        # img = cv2.GaussianBlur(img, (21, 21), 0)
-        # ret, mask = cv2.threshold(img, 0, 255,
-        #                            cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
-        mask = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                     cv2.THRESH_BINARY_INV, 11, 5)
-        # kernel = np.ones((10, 10), np.uint8)
-        # cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-        cv2.imshow("Thresh", mask)
+        img = cv2.GaussianBlur(img, (5, 5), 0)
+        ret, mask = cv2.threshold(img, 0, 255,
+                                  cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+
         (_, cnts, _) = cv2.findContours(mask,
                                         cv2.RETR_EXTERNAL,
                                         cv2.CHAIN_APPROX_SIMPLE)
@@ -277,6 +273,7 @@ class openCV():
                             list_depth.append(depth)
                             counter += 1
 
+        cv2.imshow("hand", img)
         cv2.waitKey(1)
         return mask, counter, hull1, (cx, cy), \
             list_far, list_end, list_diff1, list_diff2, list_depth
