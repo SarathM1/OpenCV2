@@ -24,7 +24,7 @@ class Dlib():
             raise ValueError('Error: NoFaces!!')
 
         landmarks = np.matrix([[p.x,  p.y]
-                          for p in self.predictor(img, rects[0]).parts()])
+                              for p in self.predictor(img, rects[0]).parts()])
 
         for group in self.MOUTH_POINTS:
             hull = cv2.convexHull(landmarks[group])
@@ -94,7 +94,7 @@ class openCV():
                 img[y3:y4, x3:x4] = self.lipSegment(head_frame)
             except ValueError, e:
                 # print 'processFrame: ', e
-                self.flags.cmd = 's' 
+                self.flags.cmd = 's'
                 pass        # To suppress No face Error
 
         else:
@@ -111,9 +111,9 @@ class openCV():
                     cv2.drawContours(hand_frame, [hull], 0, (0, 255, 0), 1)
                     cv2.putText(hand_frame, "Fingers = "+str(counter+1),
                                 (10, 250), self.font,  1, (0, 0, 255), 1, 1)
-                    
+
                     for i in range(len(list_far)):
-                        x1,y1 = list_end[i]
+                        x1, y1 = list_end[i]
                         cv2.putText(img,
                                     str(diff1[i]) + ", " + str(diff2[i]) +
                                     ", " + str(depth[i]), (x1 + 300, y1 - 10),
@@ -151,7 +151,7 @@ class openCV():
 
         else:
             cnt = None
-        
+
         self.flags.isSet_prev = self.flags.isSet_cur
         if cnt is not None:
             cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 0), 1)
@@ -178,17 +178,17 @@ class openCV():
                     self.font, 1, (255, 0, 0), 1)
 
         if(eccentricity < 0.9):
-            self.flags.cmd = 'b' 
+            self.flags.cmd = 'b'
         else:
-            self.flags.cmd = 'f' 
+            self.flags.cmd = 'f'
 
         if angle < 80:
-            self.flags.cmd = 'l' 
+            self.flags.cmd = 'l'
         elif angle > 100:
-            self.flags.cmd = 'r' 
-        
+            self.flags.cmd = 'r'
+
         cv2.putText(img, 'Cmd = ' + self.flags.cmd, (10, 300),  self.font,  1,
-                        (0, 0, 255), 1, 16)
+                    (0, 0, 255), 1, 16)
         # self.t2 = cv2.getTickCount()
         # print "Time = ", (self.t2-self.t1)/cv2.getTickFrequency()
         return img
@@ -240,7 +240,7 @@ class openCV():
                     if depth > 20:
                         diff2 = (far[0] - end[0])
                         diff1 = (far[1] - end[1])
-                        if diff1 > -45 and diff1 < 180 and diff2 > -120 :
+                        if diff1 > -45 and diff1 < 180 and diff2 > -120:
                             cv2.putText(img,
                                         str(diff1) + ", " + str(diff2) +
                                         ", " + str(depth), end,
