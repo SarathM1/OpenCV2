@@ -237,10 +237,10 @@ class openCV():
                     end = tuple(cnt[e][0])
                     far = tuple(cnt[f][0])
 
-                    if depth > 30:
+                    if depth > 20:
                         diff2 = (far[0] - end[0])
                         diff1 = (far[1] - end[1])
-                        if diff1 > 30 and diff1 < 180 and diff2 > -90 :
+                        if diff1 > -45 and diff1 < 180 and diff2 > -120 :
                             cv2.putText(img,
                                         str(diff1) + ", " + str(diff2) +
                                         ", " + str(depth), end,
