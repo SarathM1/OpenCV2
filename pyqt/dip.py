@@ -96,7 +96,7 @@ class openCV():
                 img[y3:y4, x3:x4] = self.lipSegment(head_frame)
             except ValueError, e:
                 # print 'processFrame: ', e
-                self.flags.set_stop()
+                self.flags.robot_cmd = 's' 
                 pass        # To suppress No face Error
 
         else:
@@ -186,16 +186,16 @@ class openCV():
         if(eccentricity < 0.9):
             cv2.putText(img, 'Cmd = O', (10, 300),  self.font,  1,
                         (0, 0, 255), 1, 16)
-            self.flags.set_back()
+            self.flags.robot_cmd = 'b' 
         else:
             cv2.putText(img, 'Cmd = E', (10, 300),  self.font,  1,
                         (0, 0, 255), 1, 16)
-            self.flags.set_fwd()
+            self.flags.robot_cmd = 'f' 
 
         if angle < 80:
-            self.flags.set_left()
+            self.flags.robot_cmd = 'l' 
         elif angle > 100:
-            self.flags.set_right()
+            self.flags.robot_cmd = 'r' 
         # self.t2 = cv2.getTickCount()
         # print "Time = ", (self.t2-self.t1)/cv2.getTickFrequency()
         return img
