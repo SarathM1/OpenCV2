@@ -34,12 +34,15 @@ class Flags():
         if self.isSet_button:
             self.fing_latch = 0         # Resetting fing_latch
             self.fingers = 1
-            self.ui.mode.setStyleSheet(CSS_GREEN)
             self.ui.mode.setText("Robot")
+            if str(self.ui.cmd.text()).isdigit():
+                self.ui.cmd.clear()
 
             if self.isLatch_button:
                 self.disable_arrows()
                 cmd = self.robot_cmd
+                self.ui.mode.setStyleSheet(CSS_GREEN)
+                
                 if self.robot_cmd == 'f':
                     self.ui.up_arrow.setEnabled(True)
                 
@@ -52,6 +55,11 @@ class Flags():
                 elif self.robot_cmd == 'r':
                     self.ui.right_arrow.setEnabled(True)
                 
+                elif self.robot_cmd == 's':
+                    self.ui.cmd.setText('s')
+                    self.ui.mode.setStyleSheet(CSS_RED)
+
+
                 self.cmd_latch = cmd
             else:
                 cmd = self.cmd_latch
@@ -62,6 +70,10 @@ class Flags():
             self.robot_cmd = 's' 
             self.disable_arrows()
             self.ui.mode.setText("Relay")
+            
+            if str(self.ui.cmd.text()).isalpha():
+                self.ui.cmd.clear()
+            
             if self.fingers == self.prev_fing:
                 if self.fing_latch == 10 and self.fingers!=1:             # Reduce bouncing
                     self.playAudio(str(self.fingers))
@@ -92,9 +104,9 @@ class Flags():
         self.ui.down_arrow.setEnabled(False)
         self.ui.left_arrow.setEnabled(False)
         self.ui.right_arrow.setEnabled(False)
-        self.ui.mode.setStyleSheet(CSS_RED)
-
+        
     def playAudio(self, cmd):
+        self.ui.cmd.clear()
         if cmd.isalpha():
             self.ui.cmd.setText(str(cmd))
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
