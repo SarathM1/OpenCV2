@@ -11,7 +11,7 @@ class Flags():
     vlc_instance = vlc.Instance()                                                                                                  
     player = vlc_instance.media_player_new()
 
-    robot_cmd = 's'
+    cmd = 's'
     isSet_prev = False
     isSet_cur = False
     isSet_button = False
@@ -40,34 +40,32 @@ class Flags():
 
             if self.isLatch_button:
                 self.disable_arrows()
-                cmd = self.robot_cmd
                 self.ui.mode.setStyleSheet(CSS_GREEN)
                 
-                if self.robot_cmd == 'f':
+                if self.cmd == 'f':
                     self.ui.up_arrow.setEnabled(True)
                 
-                elif self.robot_cmd == 'b':
+                elif self.cmd == 'b':
                     self.ui.down_arrow.setEnabled(True)
                     
-                elif self.robot_cmd == 'l':
+                elif self.cmd == 'l':
                     self.ui.left_arrow.setEnabled(True)
                     
-                elif self.robot_cmd == 'r':
+                elif self.cmd == 'r':
                     self.ui.right_arrow.setEnabled(True)
                 
-                elif self.robot_cmd == 's':
+                elif self.cmd == 's':
                     self.ui.cmd.setText('s')
                     self.ui.mode.setStyleSheet(CSS_RED)
 
 
-                self.cmd_latch = cmd
+                self.cmd_latch = self.cmd
             else:
-                cmd = self.cmd_latch
+                self.cmd = self.cmd_latch
 
         else:
-            cmd = 's'
-            self.cmd_latch = cmd
-            self.robot_cmd = 's' 
+            self.cmd = 's'
+            self.cmd_latch = self.cmd
             self.disable_arrows()
             self.ui.mode.setText("Relay")
             
@@ -85,16 +83,14 @@ class Flags():
 
             self.prev_fing = self.fingers
 
-        self.cur_comnd = cmd
-
-        if self.prev_comnd != self.cur_comnd:
-            self.playAudio(cmd)
+        if self.prev_comnd != self.cmd:
+            self.playAudio(self.cmd)
             try:
-                self.ser.write(cmd)
+                self.ser.write(self.cmd)
             except:
                 pass
 
-            self.prev_comnd = self.cur_comnd
+            self.prev_comnd = self.cmd
 
         if self.isSet_prev is False and self.isSet_cur is True:
             self.isSet_button = not self.isSet_button
