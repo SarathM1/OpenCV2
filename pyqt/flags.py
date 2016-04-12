@@ -30,6 +30,9 @@ class Flags():
             QMessageBox.warning(self.ui.widget, "Xbee Error", str(e))
             print e
 
+    def closeSocket(self):
+        print "\nQuitting App!!\n"
+
     def checkFlags(self):
         if self.isSet_button:
             self.fing_latch = 0         # Resetting fing_latch

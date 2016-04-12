@@ -54,6 +54,7 @@ class Gui(QtGui.QMainWindow):
 def main():
     app = QtGui.QApplication(sys.argv)
     ex = Gui()
+    app.aboutToQuit.connect(ex.flags.closeSocket)
     ex.show()
     sys.exit(app.exec_())
 
