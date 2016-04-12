@@ -103,7 +103,7 @@ class Flags():
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
             self.player.set_media(media)
             self.player.play()
-        elif int(cmd) < 6:
+        elif int(cmd) < 6 and int(cmd) > 0:
             self.ui.cmd.setText(str(cmd))
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
             self.player.set_media(media)
