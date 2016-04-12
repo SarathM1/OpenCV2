@@ -73,7 +73,7 @@ class Flags():
                 self.ui.cmd.clear()
             
             if self.fingers == self.prev_fing:
-                if self.fing_latch == 10 and self.fingers!=1:             # Reduce bouncing
+                if self.fing_latch == 10 :             # Reduce bouncing
                     self.playAudio(str(self.fingers))
                     #print self.fing_latch,"\tFingers = ",self.fingers
 

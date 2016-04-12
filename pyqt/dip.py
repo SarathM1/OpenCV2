@@ -109,10 +109,10 @@ class openCV():
                         list_end, diff1, diff2, depth = \
                         self.count_fingers(hand_frame)
 
-                self.flags.fingers = counter + 1                # For Control
+                self.flags.fingers = counter                # For Control
                 if(cv2.contourArea(hull) > 3000) and list_far:
                     cv2.drawContours(hand_frame, [hull], 0, (0, 255, 0), 1)
-                    cv2.putText(hand_frame, "Fingers = "+str(counter+1),
+                    cv2.putText(hand_frame, "Fingers = "+str(counter),
                                 (10, 250), self.font,  1, (0, 0, 255), 1, 1)
 
                     for i in range(len(list_far)):
