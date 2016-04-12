@@ -8,7 +8,7 @@ CSS_GREEN = 'background-color :rgb(0, 131, 0) ;'
 
 class Flags():
 
-    vlc_instance = vlc.Instance()                                                                                                  
+    vlc_instance = vlc.Instance()
     player = vlc_instance.media_player_new()
 
     cmd = 's'
@@ -41,23 +41,18 @@ class Flags():
             if self.isLatch_button:
                 self.disable_arrows()
                 self.ui.mode.setStyleSheet(CSS_GREEN)
-                
+
                 if self.cmd == 'f':
                     self.ui.up_arrow.setEnabled(True)
-                
                 elif self.cmd == 'b':
                     self.ui.down_arrow.setEnabled(True)
-                    
                 elif self.cmd == 'l':
                     self.ui.left_arrow.setEnabled(True)
-                    
                 elif self.cmd == 'r':
                     self.ui.right_arrow.setEnabled(True)
-                
                 elif self.cmd == 's':
                     self.ui.cmd.setText('s')
                     self.ui.mode.setStyleSheet(CSS_RED)
-
 
                 self.cmd_latch = self.cmd
             else:
@@ -68,14 +63,12 @@ class Flags():
             self.cmd_latch = self.cmd
             self.disable_arrows()
             self.ui.mode.setText("Relay")
-            
             if str(self.ui.cmd.text()).isalpha():
                 self.ui.cmd.clear()
-            
             if self.fingers == self.prev_fing:
-                if self.fing_latch == 10 :             # Reduce bouncing
+                if self.fing_latch == 10:             # Reduce bouncing
                     self.playAudio(str(self.fingers))
-                    #print self.fing_latch,"\tFingers = ",self.fingers
+                    # print self.fing_latch,"\tFingers = ",self.fingers
 
                 self.fing_latch += 1
             else:
@@ -100,18 +93,17 @@ class Flags():
         self.ui.down_arrow.setEnabled(False)
         self.ui.left_arrow.setEnabled(False)
         self.ui.right_arrow.setEnabled(False)
-        
+
     def playAudio(self, cmd):
         if cmd.isalpha():
             self.ui.cmd.setText(str(cmd))
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
-            self.player.set_media(media)                                                                
+            self.player.set_media(media)
             self.player.play()
         elif int(cmd) < 6:
             self.ui.cmd.setText(str(cmd))
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
-            self.player.set_media(media)                                                                                               
-            self.player.play() 
+            self.player.set_media(media)
+            self.player.play()
         else:
             self.ui.cmd.clear()
- 
