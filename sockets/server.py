@@ -2,14 +2,15 @@ import socket
 import sys
 import RPi.GPIO as g
 
+R1 = 3
+R2 = 5
+R3 = 7
+R4 = 11
+
 class Server():
     g.setmode(g.BOARD)
-    HOST = '192.168.1.7'
+    HOST = '192.168.1.12'
     PORT = 8888  # Arbitrary non-privileged port
-    R1 = 3
-    R2 = 5
-    R3 = 7
-    R4 = 11
     # Datagram (udp) socket
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -21,7 +22,7 @@ class Server():
     def __init__(self):
         # Bind socket to local host and port
         try:
-            self.s.bind((HOST, PORT))
+            self.s.bind((self.HOST, self.PORT))
         except socket.error, msg:
             print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
             sys.exit()
@@ -30,16 +31,16 @@ class Server():
         self.gpio_init()
     
     def gpio_init(self):
-        self.g.setup(R1, g.out)
-        self.g.setup(R2, g.out)
-        self.g.setup(R3, g.out)
-        self.g.setup(R4, g.out)
+        g.setup(R1, g.OUT)
+        g.setup(R2, g.OUT)
+        g.setup(R3, g.OUT)
+        g.setup(R4, g.OUT)
     
     def relaysOff(self):
-        self.g.output(R1, 0)
-        self.g.output(R2, 0)
-        self.g.output(R3, 0)
-        self.g.output(R4, 0)
+        g.output(R1, 0)
+        g.output(R2, 0)
+        g.output(R3, 0)
+        g.output(R4, 0)
 
     def run(self):
         # now keep talking with the client
@@ -49,8 +50,11 @@ class Server():
             data = d[0]
             addr = d[1]
         
-            if data is 'quit':
+            if data == 'q':
+                print "Breaking"
                 break
+            else:
+                print len(data),
             
             if data.isalpha():
                 print data
@@ -58,16 +62,16 @@ class Server():
                 self.relaysOff()
                 if data == '1':
                     print "Relay 1"
-                    self.g.output(R1,1)
+                    g.output(R1,1)
                 elif data == '2':
                     print "Relay 2"
-                    self.g.output(R2,1)
+                    g.output(R2,1)
                 elif data == '3':
                     print "Relay 3"
-                    self.g.output(R3,1)
+                    g.output(R3,1)
                 elif data == '4':
                     print "Relay 4"
-                    self.g.output(R4,1)
+                    g.output(R4,1)
 
             reply = 'OK...' + data
             self.s.sendto(reply, addr)
@@ -80,5 +84,6 @@ if __name__ == '__main__':
     try:
         obj.run()
     finally:
+        print "\n\tQuitting"
         obj.s.close()
-        obj.g.cleanup()
+        g.cleanup()
