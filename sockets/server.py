@@ -86,4 +86,5 @@ if __name__ == '__main__':
     finally:
         print "\n\tQuitting"
         obj.s.close()
+        obj.relaysOff()
         g.cleanup()
