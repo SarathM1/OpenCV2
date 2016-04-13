@@ -1,38 +1,84 @@
 import socket
 import sys
+import RPi.GPIO as g
 
-HOST = ''   # Symbolic name meaning all available interfaces
-PORT = 8888  # Arbitrary non-privileged port
+class Server():
+    g.setmode(g.BOARD)
+    HOST = '192.168.1.7'
+    PORT = 8888  # Arbitrary non-privileged port
+    R1 = 3
+    R2 = 5
+    R3 = 7
+    R4 = 11
+    # Datagram (udp) socket
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        print 'Socket created'
+    except socket.error, msg:
+        print 'Failed !! Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+        sys.exit()
 
-# Datagram (udp) socket
-try:
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    print 'Socket created'
-except socket.error, msg:
-    print 'Failed !! Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-    sys.exit()
+    def __init__(self):
+        # Bind socket to local host and port
+        try:
+            self.s.bind((HOST, PORT))
+        except socket.error, msg:
+            print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+            sys.exit()
+    
+        print 'Socket bind complete'
+        self.gpio_init()
+    
+    def gpio_init(self):
+        self.g.setup(R1, g.out)
+        self.g.setup(R2, g.out)
+        self.g.setup(R3, g.out)
+        self.g.setup(R4, g.out)
+    
+    def relaysOff(self):
+        self.g.output(R1, 0)
+        self.g.output(R2, 0)
+        self.g.output(R3, 0)
+        self.g.output(R4, 0)
 
-# Bind socket to local host and port
-try:
-    s.bind((HOST, PORT))
-except socket.error, msg:
-    print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-    sys.exit()
+    def run(self):
+        # now keep talking with the client
+        while 1:
+         # receive data from client (data, addr)
+            d = self.s.recvfrom(1024)
+            data = d[0]
+            addr = d[1]
+        
+            if data is 'quit':
+                break
+            
+            if data.isalpha():
+                print data
+            else:
+                self.relaysOff()
+                if data == '1':
+                    print "Relay 1"
+                    self.g.output(R1,1)
+                elif data == '2':
+                    print "Relay 2"
+                    self.g.output(R2,1)
+                elif data == '3':
+                    print "Relay 3"
+                    self.g.output(R3,1)
+                elif data == '4':
+                    print "Relay 4"
+                    self.g.output(R4,1)
 
-print 'Socket bind complete'
+            reply = 'OK...' + data
+            self.s.sendto(reply, addr)
+            print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
+        
+        self.s.close()
 
-# now keep talking with the client
-while 1:
-    # receive data from client (data, addr)
-    d = s.recvfrom(1024)
-    data = d[0]
-    addr = d[1]
-
-    if not data:
-        break
-
-    reply = 'OK...' + data
-    s.sendto(reply, addr)
-    print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
-
-s.close()
+if __name__ == '__main__':
+    obj = Server()
+    try:
+        obj.run()
+    finally:
+        obj.s.close()
+        obj.g.cleanup()

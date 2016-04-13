@@ -8,7 +8,7 @@ except socket.error:
     print 'Failed to create socket'
     sys.exit()
 
-host = 'localhost'
+host = '192.168.1.7'
 port = 8888
 
 while True:
