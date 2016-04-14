@@ -1,4 +1,5 @@
 import socket
+import serial
 import sys
 import RPi.GPIO as g
 
@@ -8,6 +9,12 @@ R3 = 7
 R4 = 11
 
 class Server():
+
+    try:
+        ser = ser = serial.Serial('/dev/ttyUSB0')
+    except Exception as e:
+        print e
+
     g.setmode(g.BOARD)
     HOST = '192.168.1.12'
     PORT = 8888  # Arbitrary non-privileged port
@@ -53,12 +60,15 @@ class Server():
             if data == 'q':
                 print "Breaking"
                 break
-            else:
-                print len(data),
             
             if data.isalpha():
                 self.relaysOff()
-                print data
+                try:
+                    self.ser.write(data)
+                    reply = 'OK...' + data
+                except Exception as e:
+                    reply = "SERIAL!!"
+                    print "Serial Send Error"
             else:
                 self.relaysOff()
                 if data == '1':
@@ -74,7 +84,8 @@ class Server():
                     print "Relay 4"
                     g.output(R4,1)
 
-            reply = 'OK...' + data
+                reply = 'OK...' + data
+
             self.s.sendto(reply, addr)
             print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
         
