@@ -145,10 +145,13 @@ class openCV():
         else:
             ret, mask = cv2.threshold(btn1, self.THRESH, 255,
                                       cv2.THRESH_BINARY_INV)
-
-        (_, cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL,
-                                        cv2.CHAIN_APPROX_SIMPLE)
-
+        try:
+            (_, cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                                            cv2.CHAIN_APPROX_SIMPLE)
+        except Exception, e:
+            (cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                                            cv2.CHAIN_APPROX_SIMPLE)
+                                        
         ci = 0
         max_area = 0
 
@@ -212,10 +215,15 @@ class openCV():
         img = cv2.GaussianBlur(img, (5, 5), 0)
         ret, mask = cv2.threshold(img, 0, 255,
                                   cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+        try:
+            (_, cnts, _) = cv2.findContours(mask,
+                                            cv2.RETR_EXTERNAL,
+                                            cv2.CHAIN_APPROX_SIMPLE)
 
-        (_, cnts, _) = cv2.findContours(mask,
-                                        cv2.RETR_EXTERNAL,
-                                        cv2.CHAIN_APPROX_SIMPLE)
+        except Exception, e:
+            (cnts, _) = cv2.findContours(mask,
+                                         cv2.RETR_EXTERNAL,
+                                         cv2.CHAIN_APPROX_SIMPLE)
         list_far = []
         list_end = []
         list_diff1 = []
