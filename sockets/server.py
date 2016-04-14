@@ -84,6 +84,8 @@ if __name__ == '__main__':
     obj = Server()
     try:
         obj.run()
+    except KeyboardInterrupt:
+        print "\n\tKeyboardInterrupt"
     finally:
         print "\n\tQuitting"
         obj.s.close()
