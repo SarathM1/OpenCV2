@@ -1,6 +1,10 @@
 from PyQt4.QtGui import QMessageBox
-import serial
+import socket
 import vlc
+import sys  # for exit
+
+host = '192.168.1.12'
+port = 8888
 
 CSS_RED = 'background-color :rgb(190, 56, 56) ;'
 CSS_GREEN = 'background-color :rgb(0, 131, 0) ;'
@@ -24,13 +28,17 @@ class Flags():
 
     def __init__(self, ui):
         self.ui = ui
+        
+        # create dgram udp socket
         try:
-            self.ser = serial.Serial('/dev/ttyUSB0')
-        except Exception, e:
-            QMessageBox.warning(self.ui.widget, "Xbee Error", str(e))
-            print e
+            self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.settimeout(1.0)
+        except socket.error:
+            QMessageBox.warning(self.ui.widget, "Socket Error", 'Failed to create socket')
+            sys.exit()
 
     def closeSocket(self):
+        self.s.close()
         print "\nQuitting App!!\n"
 
     def checkFlags(self):
@@ -81,11 +89,6 @@ class Flags():
 
         if self.prev_cmd != self.cmd:
             self.playAudio(self.cmd)
-            try:
-                self.ser.write(self.cmd)
-            except:
-                pass
-
             self.prev_cmd = self.cmd
 
         if self.isSet_prev is False and self.isSet_cur is True:
@@ -97,16 +100,37 @@ class Flags():
         self.ui.left_arrow.setEnabled(False)
         self.ui.right_arrow.setEnabled(False)
 
+    def sock_send(self, cmd):
+        try:
+            self.s.sendto(cmd, (host, port))
+            d = self.s.recvfrom(1024)
+
+            reply = d[0]
+            addr = d[1]
+            self.ui.echo.setStyleSheet(CSS_GREEN)
+            print "Sent: ", cmd, " to ", str((host, port))
+        except socket.timeout, e:
+            self.ui.echo.setStyleSheet(CSS_RED)
+            print "Socket timeout"
+
+        except socket.error, msg:
+            print "Socket Error"
+            print 'Error Code : ', msg
+            self.s.close()
+
     def playAudio(self, cmd):
+        
         if cmd.isalpha():
             self.ui.cmd.setText(str(cmd))
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
             self.player.set_media(media)
             self.player.play()
+            self.sock_send(cmd)
         elif int(cmd) < 6 and int(cmd) > 0:
             self.ui.cmd.setText(str(cmd))
             media = self.vlc_instance.media_new('./Sounds/'+cmd+'.mp3')
             self.player.set_media(media)
             self.player.play()
+            self.sock_send(cmd)
         else:
             self.ui.cmd.clear()
