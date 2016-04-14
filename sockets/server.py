@@ -16,7 +16,7 @@ class Server():
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         print 'Socket created'
     except socket.error, msg:
-        print 'Failed !! Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+        print 'Failed !! Error Code : ', msg
         sys.exit()
 
     def __init__(self):
@@ -57,6 +57,7 @@ class Server():
                 print len(data),
             
             if data.isalpha():
+                self.relaysOff()
                 print data
             else:
                 self.relaysOff()
