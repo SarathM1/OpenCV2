@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_file.ui'
 #
-# Created: Mon Apr 11 23:45:58 2016
+# Created: Thu Apr 14 14:46:32 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -99,6 +99,11 @@ class Ui_MainWindow(object):
         self.cmd.setEnabled(True)
         self.cmd.setObjectName(_fromUtf8("cmd"))
         self.horizontalLayout.addWidget(self.cmd)
+        self.echo = QtGui.QPushButton(self.horizontalLayoutWidget)
+        self.echo.setStyleSheet(_fromUtf8("background-color :rgb(190, 56, 56) ; "))
+        self.echo.setText(_fromUtf8(""))
+        self.echo.setObjectName(_fromUtf8("echo"))
+        self.horizontalLayout.addWidget(self.echo)
         self.horizontalLayoutWidget_2 = QtGui.QWidget(self.centralwidget)
         self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(10, 390, 101, 51))
         self.horizontalLayoutWidget_2.setObjectName(_fromUtf8("horizontalLayoutWidget_2"))
@@ -141,7 +146,7 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.label_4, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1071, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1071, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)

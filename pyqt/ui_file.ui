@@ -176,6 +176,16 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="echo">
+       <property name="styleSheet">
+        <string notr="true">background-color :rgb(190, 56, 56) ; </string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget_2">
@@ -289,7 +299,7 @@
      <x>0</x>
      <y>0</y>
      <width>1071</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
