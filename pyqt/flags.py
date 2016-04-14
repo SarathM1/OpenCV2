@@ -32,7 +32,7 @@ class Flags():
         # create dgram udp socket
         try:
             self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.settimeout(1.0)
+            self.s.settimeout(1.0)
         except socket.error:
             QMessageBox.warning(self.ui.widget, "Socket Error", 'Failed to create socket')
             sys.exit()
@@ -107,10 +107,9 @@ class Flags():
 
             reply = d[0]
             addr = d[1]
-            self.ui.echo.setStyleSheet(CSS_GREEN)
-            print "Sent: ", cmd, " to ", str((host, port))
+            self.ui.echo.setText(reply)
         except socket.timeout, e:
-            self.ui.echo.setStyleSheet(CSS_RED)
+            self.ui.echo.setText("TIME!!")
             print "Socket timeout"
 
         except socket.error, msg:
